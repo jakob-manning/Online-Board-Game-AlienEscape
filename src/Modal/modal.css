@@ -1,0 +1,44 @@
+.modal-item-img {
+    max-width: 50px;
+    margin: 20px;
+}
+
+
+.modalBackdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 150vh;
+    width: 100%;
+
+    background-color: #282c34;
+    opacity: 0.5;
+
+    filter: blur(80px);
+    z-index: 100;
+
+    border: solid greenyellow;
+}
+
+
+.modalCard {
+    position: fixed;
+    top: 10%;
+    bottom: 10%;
+
+    margin: auto;
+    max-width: 75%;
+    max-width: 280px;
+    z-index: 200;
+
+    max-height: 85vh;
+
+    overflow: auto;
+}
+
+.modalCardImage {
+    object-fit: cover;
+    object-position: bottom;
+    max-height: 60vh;
+
+}

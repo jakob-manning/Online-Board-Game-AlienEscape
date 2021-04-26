@@ -1,0 +1,26 @@
+.itemHand {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    /*opacity: .9;*/
+    /*box-shadow: 5px 5px 20px white, -10px -10px -200px black, 1px 1px 300px -5px red;*/
+
+
+}
+
+.itemCards {
+    /*max-width: 150px;*/
+    /*max-width: 8%;*/
+    /*min-width: 100px;*/
+    max-width: 80px;
+    margin: 20px;
+    padding: 10px;
+    background-color: white;
+    border-radius: 200px;
+    box-shadow: 1px 0px 30px -5px red;
+
+
+}
