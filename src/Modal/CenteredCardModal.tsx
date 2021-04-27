@@ -28,15 +28,14 @@ const CenteredCardModal: React.FC<Props> = (props) => {
         </React.Fragment>
     )
 
-    // const itemDescription = (
-    //     <React.Fragment>
-    //         <Card.Subtitle>
-    //             {props.item ? "New Item: " : null}
-    //             {props.item != null ? props.item?.title : null}
-    //             <p></p>
-    //         </Card.Subtitle>
-    //     </React.Fragment>
-    // )
+    const itemDescription = (
+        <React.Fragment>
+            <Card.Title>
+                {props.item ? "New Item: " : null}
+                {props.item ? props.item?.title : null}
+            </Card.Title>
+        </React.Fragment>
+    )
 
 
     return (
@@ -54,7 +53,7 @@ const CenteredCardModal: React.FC<Props> = (props) => {
                 </Modal.Header>
                 <Modal.Body>
                     <Card>
-                        <Card.Img variant="bottom" src={props.image} alt={props.title + " item icon"}/>
+                        <Card.Img variant="top" src={props.image} alt={props.title + " card face"}/>
                     </Card>
                 </Modal.Body>
                 <Modal.Footer>
@@ -73,6 +72,7 @@ const CenteredCardModal: React.FC<Props> = (props) => {
                         Done
                     </Button>
                     <p />
+                    {itemDescription}
                     {moreInfo ? cardDescription : null}
                 </Modal.Footer>
             </Modal>
