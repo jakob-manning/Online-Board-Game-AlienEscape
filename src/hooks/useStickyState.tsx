@@ -1,6 +1,7 @@
 import React from "react";
+import {itemInterface} from "../types/types";
 
-const useStickyState = (defaultValue: string, key: string)  => {
+const useStickyState = (defaultValue: itemInterface[], key: string)  => {
     const [value, setValue] = React.useState(() => {
         const stickyValue = window.localStorage.getItem(key);
         return stickyValue !== null

@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {Button, Container, Card, CardDeck} from "react-bootstrap";
+import {Container, Card} from "react-bootstrap";
 import cardBackMovement from "../../Images/cardBackMovement.jpg"
 import chooser from "random-seed-weighted-chooser";
 import {cardInterface, itemInterface} from "../../types/types";
@@ -9,19 +9,14 @@ import {possibleItems} from "../gamePieces/itemCards";
 import UsersCurrentItems from "../Items/UsersCurrentItems";
 import CenteredCardModal from "../../Modal/CenteredCardModal";
 import HumanAlienSwitch from "../HumanAlienSwitch";
+import useStickyState from "../../hooks/useStickyState";
 
 function Game() {
     const [cardDisplayed, setCardDisplayed] = useState<cardInterface | null>(null)
-    const [moreInfo, setMoreInfo] = useState<boolean>(false)
-    const [items, setItems] = useState<itemInterface[]>([])
+    const [storedItems,setStoredItems] = useStickyState([], "BoardGameAlienEscape")
 
     const closeCard = () => {
-        setMoreInfo(false)
         setCardDisplayed(null)
-    }
-
-    const toggleInfo = () => {
-        setMoreInfo(!moreInfo)
     }
 
     const generateCard = () => {
@@ -48,19 +43,19 @@ function Game() {
             return null
         }
         const currentItem = chooser.chooseWeightedObject(possibleItems) as itemInterface
-        setItems([...items, currentItem])
+        setStoredItems([...storedItems, currentItem])
         console.log(currentItem)
         return currentItem
     }
 
     const removeItem = (item: itemInterface) => {
         console.log(item)
-        let index = items.findIndex(element => element.title == item.title)
-        let newItems = [...items]
+        let index = storedItems.findIndex((element:itemInterface) => element.title === item.title)
+        let newItems = [...storedItems]
         newItems.splice(index, 1)
         console.log(index)
         console.log(newItems)
-        setItems(newItems)
+        setStoredItems(newItems)
     }
 
     return (
@@ -78,17 +73,12 @@ function Game() {
                     {/*<Button block as={"h1"} onClick={() => generateCard()} variant={"outline-primary"}>Draw</Button>*/}
                     <Card border={"dark"} onClick={() => generateCard()}>
                         <Card.Img src={cardBackMovement} alt="Card back"/>
-                        <Card.ImgOverlay>
-                            <Card.Title>
-                                <div className={"draw-button"}>
-                                    <h1>DRAW</h1>
-                                </div>
-                            </Card.Title>
-                        </Card.ImgOverlay>
                     </Card>
                 </div>
             </Container>
-            <UsersCurrentItems itemList={items} removeItem={(item: itemInterface) => removeItem(item)}/>
+            <div className={"flexGrow"}>
+                <UsersCurrentItems itemList={storedItems} removeItem={(item: itemInterface) => removeItem(item)}/>
+            </div>
 
         </React.Fragment>
     )

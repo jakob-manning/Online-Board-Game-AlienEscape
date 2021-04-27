@@ -1,0 +1,23 @@
+.FooterWrapper {
+    margin-top: 100px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: end;
+
+    margin-right: auto;
+    margin-left: auto;
+
+    opacity: 0.9;
+
+    max-width: 500px;
+    padding: 10px;
+
+    align-self: flex-start;
+    flex-shrink: 0
+}
+
+.FooterItem {
+    padding: 20px;
+}

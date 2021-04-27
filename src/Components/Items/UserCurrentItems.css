@@ -4,7 +4,7 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-    z-index: 1;
+    z-index: 100;
     /*opacity: .9;*/
     /*box-shadow: 5px 5px 20px white, -10px -10px -200px black, 1px 1px 300px -5px red;*/
 
@@ -21,6 +21,8 @@
     background-color: white;
     border-radius: 200px;
     box-shadow: 1px 0px 30px -5px red;
+
+    z-index: 100;
 
 
 }
