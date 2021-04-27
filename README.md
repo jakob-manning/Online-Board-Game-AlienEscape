@@ -8,6 +8,6 @@ An experiment in React Typescript
 - Call up your friends
 - Become an Alien
 
-## TBC
+## To Do
 - auto-deal factions
 - backend to handle table creation
