@@ -13,3 +13,10 @@ export interface itemInterface {
     image: string
     weight?: number
 }
+
+export interface gameState {
+    tableName: string;
+    playerName: string;
+    role: string
+    items: itemInterface[]
+}
