@@ -13,6 +13,7 @@ import {
 import {Formik, Form, Field, FormikProps, FieldProps, FormikHelpers} from "formik";
 import {useHistory} from 'react-router-dom';
 import axios from "axios"
+const { REACT_APP_BACKEND } = process.env;
 
 interface MyFormValues {
     tableName: string;
@@ -48,7 +49,7 @@ const NewGame: React.FC = (props) => {
         }
         console.log(values)
         console.log(JSON.stringify(body))
-        const url = "http://localhost:8080/newGame"
+        const url =  REACT_APP_BACKEND + "/newGame"
 
         let response: any
         try {

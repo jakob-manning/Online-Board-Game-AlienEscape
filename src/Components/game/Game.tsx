@@ -84,8 +84,8 @@ function Game() {
                     m={"5"}
                     bgGradient="linear(to-l, #00A,#000)"
                     bgClip="text"
-                    fontSize="xs"
-                    opacity={"0.3"}
+                    fontSize="xl"
+                    opacity={"0.6"}
                     fontWeight="extrabold"
                 >
                     {gameState.role}

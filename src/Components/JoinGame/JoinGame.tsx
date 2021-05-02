@@ -58,7 +58,7 @@ const JoinGame: React.FC = (props) => {
 
     const submitJoinGameHandler = async (values: MyFormValues, actions: FormikHelpers<MyFormValues>) => {
         const body = values
-        const url = "http://localhost:8080/joinGame"
+        const url = process.env.REACT_APP_BACKEND + "/joinGame"
 
         let response: any
         try {

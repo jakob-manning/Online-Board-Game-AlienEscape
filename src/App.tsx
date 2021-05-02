@@ -27,6 +27,10 @@ function App() {
                         <Game/>
                         <Footer/>
                     </Route>
+                    <Route path="/game">
+                        <Game/>
+                        <Footer/>
+                    </Route>
                     <Route path="/new_game">
                         <NewGame />
                     </Route>
