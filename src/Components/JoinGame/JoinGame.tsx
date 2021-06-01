@@ -13,7 +13,6 @@ import {
 import {Formik, Form, Field, FormikProps, FieldProps, FormikHelpers} from "formik";
 import {useHistory, useParams} from 'react-router-dom';
 import axios from "axios"
-import useStickyState from "../../hooks/useStickyState";
 import {itemInterface} from "../../types/types";
 
 

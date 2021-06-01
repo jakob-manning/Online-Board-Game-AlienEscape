@@ -12,6 +12,8 @@ import { AddIcon } from '@chakra-ui/icons'
 import { Box, Text, Button, Link} from "@chakra-ui/react"
 import JoinGame from "./Components/JoinGame/JoinGame";
 import NewGame from "./Components/NewGame/NewGame";
+import Login from "./Components/Login/Login";
+import SignUp from "./Components/Login/Signup";
 
 function App() {
 
@@ -23,6 +25,12 @@ function App() {
                 <img src={backgroundLeftLow} alt={"background gradient"} className={"bgImgLeftLow"}/>
                 <p/>
                 <Switch>
+                    <Route path="/login">
+                        <Login/>
+                    </Route>
+                    <Route path="/signup">
+                        <SignUp />
+                    </Route>
                     <Route path="/game/:tableName">
                         <Game/>
                         <Footer/>
