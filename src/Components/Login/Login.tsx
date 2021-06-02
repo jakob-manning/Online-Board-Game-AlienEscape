@@ -30,14 +30,6 @@ const Login: React.FC = (props) => {
 
     const togglePasswordShow = () => setShowPassword(!showPassword)
 
-    function validateName(value: string) {
-        let error
-        if (!value) {
-            error = "Required"
-        }
-        return error
-    }
-
     function validatePassword(value: string) {
         let error
         if (!value) {
@@ -56,15 +48,6 @@ const Login: React.FC = (props) => {
         }
         if (!isEmail(value)) {
             error = "Emails don't look like that, try harder"
-        }
-        return error
-    }
-
-    // TODO: write a validator for email
-    function validateNumber(value: string) {
-        let error
-        if (!value || !(parseInt(value) > 0)) {
-            error = "Value required"
         }
         return error
     }
@@ -90,6 +73,8 @@ const Login: React.FC = (props) => {
                     duration: 2000,
                     isClosable: true,
                 })
+                // TODO: store the JWT to local storage and update react useContext
+
                 history.push("/")
 
             }
@@ -122,19 +107,51 @@ const Login: React.FC = (props) => {
 
     }
 
-
     return (
         <React.Fragment>
-            <Box w="100%" bgGradient="linear(to-l, #7928CA, #FF0080)">
-                <Text
+            <Box w="100%"
+                 bgGradient="linear(to-l, #7928CA, #FF0080)"
+                 justifyContent={"center"}
+                 flexDirection={"row"}
+                 display={"flex"}
+                 flexWrap={"wrap"}
+            >
+                <Button
+                    bg={"none"}
                     m={"5"}
-                    bgGradient="linear(to-l, #00A,#000)"
-                    bgClip="text"
-                    fontSize="6xl"
-                    fontWeight="extrabold"
+                    p={"10"}
+                    pb={"12"}
+                    lineHeight={2.2}
                 >
-                    Login
-                </Text>
+                    <Text
+                        m={"5"}
+                        bgGradient="linear(to-l, #008,#000)"
+                        bgClip="text"
+                        fontSize="6xl"
+                        fontWeight="extrabold"
+                    >
+                        Login
+                    </Text>
+                </Button>
+                <Button
+                    bg={"none"}
+                    m={"5"}
+                    p={"10"}
+                    pb={"12"}
+                    lineHeight={2.2}
+                    onClick={() => history.push("/signup")}
+                >
+                    <Text
+                        m={"5"}
+                        bgGradient="linear(to-l, #000,#008)"
+                        bgClip="text"
+                        fontSize="6xl"
+                        opacity={0.3}
+                        fontWeight="extrabold"
+                    >
+                        Sign Up
+                    </Text>
+                </Button>
             </Box>
             <Text
                 m={"5"}
@@ -159,7 +176,7 @@ const Login: React.FC = (props) => {
                             {({field, form}: FieldProps) => (
                                 <FormControl isInvalid={!!form.errors.email && !!form.touched.email}>
                                     <FormLabel htmlFor="email">Email</FormLabel>
-                                    <Input {...field} id="email" placeholder=""/>
+                                    <Input {...field} id="email" placeholder="" mb={"5"}/>
                                     <FormErrorMessage>{form.errors.email}</FormErrorMessage>
                                 </FormControl>
                             )}
@@ -168,7 +185,7 @@ const Login: React.FC = (props) => {
                             {({field, form}: FieldProps) => (
                                 <FormControl isInvalid={!!form.errors.password && !!form.touched.password}>
                                     <FormLabel htmlFor="password">Password</FormLabel>
-                                    <InputGroup size="md">
+                                    <InputGroup size="md" mb={"5"}>
                                         <Input
                                             {...field}
                                             type={showPassword ? "text" : "password"}

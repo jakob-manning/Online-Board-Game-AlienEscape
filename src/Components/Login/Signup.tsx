@@ -1,7 +1,6 @@
 import React from 'react';
 import {
     Box,
-    CircularProgress,
     Text,
     useToast,
     Button,
@@ -43,19 +42,21 @@ const SignUp: React.FC = (props) => {
     function validatePassword(value: string) {
         let error
         if (!value) {
-            error = "Required"
+            error = "Password is Required"
         }
-        if (value.length > 8) {
+        if (value.length < 8) {
             error = "Password is weaksauce"
         }
         return error
     }
 
-    // TODO: write a validator for email
-    function validateNumber(value: string) {
+    function validateEmail (value: string) {
         let error
-        if (!value || !(parseInt(value) > 0)) {
-            error = "Value required"
+        if (!value) {
+            error = "Email is Required"
+        }
+        if (!isEmail(value)) {
+            error = "Emails don't look like that, try harder"
         }
         return error
     }
@@ -114,16 +115,49 @@ const SignUp: React.FC = (props) => {
 
     return (
         <React.Fragment>
-            <Box w="100%" bgGradient="linear(to-l, #7928CA, #FF0080)">
-                <Text
+            <Box w="100%"
+                 bgGradient="linear(to-l, #7928CA, #FF0080)"
+                 justifyContent={"center"}
+                 flexDirection={"row"}
+                 display={"flex"}
+                 flexWrap={"wrap"}
+            >
+                <Button
+                    bg={"none"}
                     m={"5"}
-                    bgGradient="linear(to-l, #00A,#000)"
-                    bgClip="text"
-                    fontSize="6xl"
-                    fontWeight="extrabold"
+                    p={"10"}
+                    pb={"12"}
+                    lineHeight={2.2}
+                    onClick={() => history.push("/login")}
                 >
-                    Sign Up
-                </Text>
+                    <Text
+                        m={"5"}
+                        bgGradient="linear(to-l, #008,#000)"
+                        bgClip="text"
+                        fontSize="6xl"
+                        opacity={0.3}
+                        fontWeight="extrabold"
+                    >
+                        Login
+                    </Text>
+                </Button>
+                <Button
+                    bg={"none"}
+                    m={"5"}
+                    p={"10"}
+                    pb={"12"}
+                    lineHeight={2.2}
+                >
+                    <Text
+                        m={"5"}
+                        bgGradient="linear(to-l, #000,#008)"
+                        bgClip="text"
+                        fontSize="6xl"
+                        fontWeight="extrabold"
+                    >
+                        Sign Up
+                    </Text>
+                </Button>
             </Box>
             <Text
                 m={"5"}
@@ -149,16 +183,16 @@ const SignUp: React.FC = (props) => {
                             {({field, form}: FieldProps) => (
                                 <FormControl isInvalid={!!form.errors.name && !!form.touched.name}>
                                     <FormLabel htmlFor="name">User Name</FormLabel>
-                                    <Input {...field} id="name" placeholder=""/>
+                                    <Input {...field} id="name" placeholder=""  mb={"5"}/>
                                     <FormErrorMessage>{form.errors.name}</FormErrorMessage>
                                 </FormControl>
                             )}
                         </Field>
-                        <Field name="email" validate={validateName}>
+                        <Field name="email" validate={validateEmail}>
                             {({field, form}: FieldProps) => (
                                 <FormControl isInvalid={!!form.errors.email && !!form.touched.email}>
                                     <FormLabel htmlFor="email">Email</FormLabel>
-                                    <Input {...field} id="email" placeholder=""/>
+                                    <Input {...field} id="email" placeholder=""  mb={"5"}/>
                                     <FormErrorMessage>{form.errors.email}</FormErrorMessage>
                                 </FormControl>
                             )}
@@ -167,7 +201,7 @@ const SignUp: React.FC = (props) => {
                             {({field, form}: FieldProps) => (
                                 <FormControl isInvalid={!!form.errors.password && !!form.touched.password}>
                                     <FormLabel htmlFor="password">Password</FormLabel>
-                                    <InputGroup size="md">
+                                    <InputGroup size="md"  mb={"5"}>
                                         <Input
                                             {...field}
                                             type={showPassword ? "text" : "password"}
