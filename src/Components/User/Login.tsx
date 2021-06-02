@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {
     Box,
     Text,
@@ -6,38 +6,31 @@ import {
     Button,
     Input,
     InputRightElement,
-    InputGroup,
     FormControl,
     FormLabel,
-    FormErrorMessage
+    FormErrorMessage, InputGroup
 } from "@chakra-ui/react";
 import {Formik, Form, Field, FormikProps, FieldProps, FormikHelpers} from "formik";
 import {useHistory} from 'react-router-dom';
 import axios from "axios"
-import isEmail from 'validator/lib/isEmail';
+import isEmail from 'validator/lib/isEmail'
 
-const {REACT_APP_BACKEND} = process.env;
+import {AuthContext} from '../../context/auth-context';
+
+const { REACT_APP_BACKEND } = process.env;
 
 interface MyFormValues {
-    name: string;
     email: string;
     password: string;
 }
 
-const SignUp: React.FC = (props) => {
+const Login: React.FC = (props) => {
+    const auth = useContext(AuthContext);
     const [showPassword, setShowPassword] = React.useState(false)
     const history = useHistory()
     const toast = useToast()
 
     const togglePasswordShow = () => setShowPassword(!showPassword)
-
-    function validateName(value: string) {
-        let error
-        if (!value) {
-            error = "Required"
-        }
-        return error
-    }
 
     function validatePassword(value: string) {
         let error
@@ -63,19 +56,15 @@ const SignUp: React.FC = (props) => {
 
     const submitLoginHandler = async (values: MyFormValues, actions: FormikHelpers<MyFormValues>) => {
         const body = {
-            name: values.name,
             email: values.email,
             password: values.password
         }
-        console.log(values)
-        console.log(JSON.stringify(body))
-        const url = REACT_APP_BACKEND + "/api/users/signup"
+        const url =  REACT_APP_BACKEND + "/api/users/login"
 
         let response: any
         try {
             response = await axios.post(url, body)
-            console.log(response.data)
-            if (response.data) {
+            if(response.data){
                 toast({
                     title: "You're in.",
                     description: "Welcome back",
@@ -83,9 +72,11 @@ const SignUp: React.FC = (props) => {
                     duration: 2000,
                     isClosable: true,
                 })
-                history.push("/")
-
-            } else {
+                actions.setSubmitting(false)
+                auth.login(response.data.userId, response.data.token, null);
+                return history.push("/profile")
+            }
+            else {
                 toast({
                     title: "Something went wrong.",
                     description: "Unable to sign in, please try again.",
@@ -97,7 +88,7 @@ const SignUp: React.FC = (props) => {
 
         } catch (e) {
             console.log(e)
-            if (e.response) {
+            if(e.response){
                 toast({
                     title: "Unable to sign in.",
                     description: e.response.data.message,
@@ -107,6 +98,7 @@ const SignUp: React.FC = (props) => {
                 })
             }
         }
+
 
         actions.setSubmitting(false)
         return
@@ -128,14 +120,12 @@ const SignUp: React.FC = (props) => {
                     p={"10"}
                     pb={"12"}
                     lineHeight={2.2}
-                    onClick={() => history.push("/login")}
                 >
                     <Text
                         m={"5"}
                         bgGradient="linear(to-l, #008,#000)"
                         bgClip="text"
                         fontSize="6xl"
-                        opacity={0.3}
                         fontWeight="extrabold"
                     >
                         Login
@@ -147,12 +137,14 @@ const SignUp: React.FC = (props) => {
                     p={"10"}
                     pb={"12"}
                     lineHeight={2.2}
+                    onClick={() => history.push("/signup")}
                 >
                     <Text
                         m={"5"}
                         bgGradient="linear(to-l, #000,#008)"
                         bgClip="text"
                         fontSize="6xl"
+                        opacity={0.3}
                         fontWeight="extrabold"
                     >
                         Sign Up
@@ -166,12 +158,11 @@ const SignUp: React.FC = (props) => {
                 fontSize="xl"
                 fontWeight="extrabold"
             >
-                Want to play a game? ...
+                Come out, come out, wherever you are...
             </Text>
 
             <Formik
                 initialValues={{
-                    name: "",
                     email: "",
                     password: ""
                 }}
@@ -179,20 +170,11 @@ const SignUp: React.FC = (props) => {
             >
                 {(props: FormikProps<MyFormValues>) => (
                     <Form>
-                        <Field name="name" validate={validateName}>
-                            {({field, form}: FieldProps) => (
-                                <FormControl isInvalid={!!form.errors.name && !!form.touched.name}>
-                                    <FormLabel htmlFor="name">User Name</FormLabel>
-                                    <Input {...field} id="name" placeholder=""  mb={"5"}/>
-                                    <FormErrorMessage>{form.errors.name}</FormErrorMessage>
-                                </FormControl>
-                            )}
-                        </Field>
                         <Field name="email" validate={validateEmail}>
                             {({field, form}: FieldProps) => (
                                 <FormControl isInvalid={!!form.errors.email && !!form.touched.email}>
                                     <FormLabel htmlFor="email">Email</FormLabel>
-                                    <Input {...field} id="email" placeholder=""  mb={"5"}/>
+                                    <Input {...field} id="email" placeholder="" mb={"5"}/>
                                     <FormErrorMessage>{form.errors.email}</FormErrorMessage>
                                 </FormControl>
                             )}
@@ -201,7 +183,7 @@ const SignUp: React.FC = (props) => {
                             {({field, form}: FieldProps) => (
                                 <FormControl isInvalid={!!form.errors.password && !!form.touched.password}>
                                     <FormLabel htmlFor="password">Password</FormLabel>
-                                    <InputGroup size="md"  mb={"5"}>
+                                    <InputGroup size="md" mb={"5"}>
                                         <Input
                                             {...field}
                                             type={showPassword ? "text" : "password"}
@@ -235,4 +217,4 @@ const SignUp: React.FC = (props) => {
     )
 }
 
-export default SignUp
+export default Login
