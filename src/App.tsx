@@ -16,7 +16,8 @@ import Login from "./Components/User/Login";
 import SignUp from "./Components/User/Signup";
 import HomePage from "./Components/HomePage";
 import Game from "./Components/game/Game";
-import Profile from "./Components/User/Profile";
+import SocketChatRoom from "./Components/User/ChatRooms";
+import ChatRooms from "./Components/Chat/ChatRooms";
 
 
 function App() {
@@ -46,7 +47,10 @@ function App() {
                             <SignUp/>
                         </Route>
                         <Route path="/profile">
-                            <Profile/>
+                            <SocketChatRoom/>
+                        </Route>
+                        <Route path="/chat">
+                            <ChatRooms />
                         </Route>
                         <Route path="/game/:tableName">
                             <Game/>

@@ -20,3 +20,21 @@ export interface gameState {
     role: string
     items: itemInterface[]
 }
+
+export interface chatItem {
+    userID: string,
+    name: string,
+    message: string
+}
+
+export interface chatRoom {
+    id: string,
+    name: string,
+    description?: string,
+    dateCreated: Date,
+    lastUsed: Date,
+    creator: string,
+    owners?: string[],
+    members?: string[],
+    password?: string,
+}
