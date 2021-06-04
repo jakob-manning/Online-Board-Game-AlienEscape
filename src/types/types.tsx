@@ -38,3 +38,15 @@ export interface chatRoom {
     members?: string[],
     password?: string,
 }
+
+export interface Toast {
+    mode?: "mute" | "verbose"
+    successMode?: "mute" | "verbose"
+    errorMode?: "mute" | "verbose"
+    successTitle?: string
+    successBody?: string
+    successStatus?: "error" | "info" | "warning" | "success"
+    errorTitle?: string
+    errorFallBack?: string
+    errorStatus?: "error" | "info" | "warning" | "success"
+}

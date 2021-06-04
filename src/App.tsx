@@ -18,6 +18,7 @@ import HomePage from "./Components/HomePage";
 import Game from "./Components/game/Game";
 import SocketChatRoom from "./Components/User/ChatRooms";
 import ChatRooms from "./Components/Chat/ChatRooms";
+import ChatRoom from "./Components/Chat/ChatRoom";
 
 
 function App() {
@@ -48,6 +49,9 @@ function App() {
                         </Route>
                         <Route path="/profile">
                             <SocketChatRoom/>
+                        </Route>
+                        <Route path="/chat/:chatRoomName">
+                            <ChatRoom />
                         </Route>
                         <Route path="/chat">
                             <ChatRooms />

@@ -4,6 +4,8 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {ChakraProvider, extendTheme} from "@chakra-ui/react"
+import {ThemeProvider} from "@material-ui/core/styles";
+import {createMuiTheme} from "@material-ui/core/styles";
 
 // Initialize Chakra Theme
 const colors = {
@@ -13,15 +15,36 @@ const colors = {
         700: "#2a69ac",
     },
 }
-const theme = extendTheme({ colors })
+const theme = extendTheme({colors})
+
+// Initialize MUI Theme
+const materialTheme = createMuiTheme({
+    palette: {
+        primary: {
+            dark: "#82488c",
+            light: "#c786d3",
+            main: '#ba68c8',
+        },
+        secondary: {
+            dark: "#b22c5a",
+            light: "#ff669a",
+            main: '#ff4081',
+        },
+        background: {
+            paper: "linear-gradient(to right, tomato, cyan)",
+        }
+    },
+});
 
 ReactDOM.render(
-  <React.StrictMode>
-      <ChakraProvider>
-        <App />
-      </ChakraProvider>
-  </React.StrictMode>,
-  document.getElementById('root')
+    <React.StrictMode>
+        <ChakraProvider>
+            <ThemeProvider theme={materialTheme}>
+                <App/>
+            </ThemeProvider>
+        </ChakraProvider>
+    </React.StrictMode>,
+    document.getElementById('root')
 );
 
 // If you want to start measuring performance in your app, pass a function

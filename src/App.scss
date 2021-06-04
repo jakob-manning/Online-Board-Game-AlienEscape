@@ -1,5 +1,18 @@
 /* The following line can be included in a src/App.scss */
 
+::-moz-selection {
+  background: rgba(245, 245, 245, 0.3);
+  opacity: 0.3;
+  color: lightpink;
+}
+::selection {
+  background: rgba(245, 245, 245, 0.8);
+  opacity: 0.3;
+  color: hotpink;
+  -webkit-text-stroke-width: 0.5px;
+  -webkit-text-stroke-color: whitesmoke;
+}
+
 .cardBackWrapper {
   position: relative;
   max-width: 300px;

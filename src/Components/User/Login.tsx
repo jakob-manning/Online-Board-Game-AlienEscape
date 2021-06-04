@@ -79,7 +79,7 @@ const Login: React.FC = (props) => {
             else {
                 toast({
                     title: "Something went wrong.",
-                    description: "Unable to sign in, please try again.",
+                    description: response.data.message || "Unable to sign in, please try again.",
                     status: "info",
                     duration: 6000,
                     isClosable: true,
