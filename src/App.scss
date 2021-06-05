@@ -1,16 +1,32 @@
 /* The following line can be included in a src/App.scss */
 
 ::-moz-selection {
-  background: rgba(245, 245, 245, 0.3);
+  background: rgba(143, 86, 136, 0.5);
   opacity: 0.3;
-  color: lightpink;
+  color: white;
+  //-webkit-text-stroke-width: 0.5px;
+  //-webkit-text-stroke-color: whitesmoke;
 }
 ::selection {
-  background: rgba(245, 245, 245, 0.8);
+  background: rgba(143, 86, 136, 0.5);
   opacity: 0.3;
-  color: hotpink;
-  -webkit-text-stroke-width: 0.5px;
-  -webkit-text-stroke-color: whitesmoke;
+  color: white;
+  //-webkit-text-stroke-width: 0.5px;
+  //-webkit-text-stroke-color: whitesmoke;
+}
+
+::-webkit-scrollbar {
+  width: 0.2em;
+}
+
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+::-webkit-scrollbar-thumb {
+  height: 5px;
+  background-color: rgba(169, 169, 169, 0.9);
+  outline: 1px solid rgba(169, 169, 169, 0.5);
 }
 
 .cardBackWrapper {
@@ -20,7 +36,7 @@
   cursor: pointer;
   z-index: 100;
 
-  box-shadow: 1px 0px 60px -30px red, -10px -8px 20px -50px gray;
+  box-shadow: 1 0 60 -30 red, -10 -8 20 -50 gray;
 
 }
 
@@ -74,8 +90,10 @@
   min-height: 100vh;
   width: 100%;
 
-  background-color: #282c34;
+  //background-color: #282c34;
+  background-color: whitesmoke;
 
+  //color: darkgray;
   color: darkgray;
   text-align: center;
   position: absolute;

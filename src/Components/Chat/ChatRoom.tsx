@@ -1,4 +1,4 @@
-import React, {FormEvent, useContext, useEffect} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
     Box,
     Text,
@@ -8,30 +8,39 @@ import {
     Popover, PopoverTrigger, PopoverBody,
     PopoverCloseButton, PopoverHeader, PopoverArrow,
     PopoverContent,
-    useDisclosure, Input, InputRightElement, InputGroup, FormControl, FormLabel, FormErrorMessage,
+    useDisclosure, Input, InputRightElement, InputGroup, useToast,
 } from "@chakra-ui/react";
 import {SettingsIcon} from '@chakra-ui/icons'
-import {useHistory, useParams} from 'react-router-dom';
-import {chatRoom, Toast} from "../../types/types";
-import {useHttpClient} from "../../hooks/http-hook";
-import {Field, FieldProps, Form, Formik, FormikHelpers, FormikProps} from "formik";
-import EditRoom from "./EditRoom";
+import {FormikHelpers} from "formik";
 
-const {REACT_APP_BACKEND} = process.env;
+import {useHistory, useParams} from 'react-router-dom';
+import {chatItem, chatRoom, Toast} from "../../types/types";
+import {useHttpClient} from "../../hooks/http-hook";
+import {
+    initiateSocket, disconnectSocket,
+    subscribeToChat, sendMessage, loadHistory
+} from '../../hooks/socket-hook';
+import EditRoom from "./EditRoom";
+import ChatFeed from "./ChatFeed";
+import {AuthContext} from "../../context/auth-context";
+import ChatInput from "./ChatInput";
 
 interface RouteParams {
     chatRoomName: string
 }
 
 const ChatRoom: React.FC = (props) => {
-    const {isLoading, error, sendRequest, clearError} = useHttpClient()
+    const toast = useToast()
+    const auth = useContext(AuthContext);
+    const {sendRequest} = useHttpClient()
     const history = useHistory()
     const [room, setRoom] = React.useState<chatRoom | undefined>(undefined)
+    const [chat, setChat] = useState<chatItem[]>([]);
     const {onOpen, onClose, isOpen} = useDisclosure()
 
     const chatRoomName = useParams<RouteParams>().chatRoomName;
 
-    const requestHandler = async () => {
+    const initialLoadHandler = async () => {
         try {
             let toast: Toast = {
                 successMode: "mute",
@@ -53,7 +62,7 @@ const ChatRoom: React.FC = (props) => {
 
     // Request rooms on page load
     useEffect(() => {
-        requestHandler()
+        initialLoadHandler()
     }, [])
 
     const roomChangeHandler = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -72,7 +81,7 @@ const ChatRoom: React.FC = (props) => {
         return
     }
 
-    const deleteHandler = async () => {
+    const deleteRoomHandler = async () => {
         const endPoint = "/api/chat/" + room?.id
         const toast: Toast = {
             successTitle: "Room Deleted",
@@ -82,7 +91,7 @@ const ChatRoom: React.FC = (props) => {
             errorFallBack: "Couldn't delete this dang chat room. Try again or call it a day?",
             errorStatus: "error"
         }
-        try{
+        try {
             let response = await sendRequest("delete",
                 endPoint,
                 toast
@@ -92,92 +101,158 @@ const ChatRoom: React.FC = (props) => {
         } catch (e) {
             console.log(e)
         }
-}
+    }
 
+    const errorHandler = (error: Error) => {
+        toast({
+            title: "Oppsie-daisy.",
+            description: (error.message || "Something went wrong, please make like Brexit and try again."),
+            status: "error",
+            duration: 3000,
+            isClosable: true,
+        })
+        return
+    }
 
+    useEffect(() => {
+        if (room) initiateSocket(room.id, auth.token, errorHandler)
 
-return (
-    <React.Fragment>
-        <Box w="100%"
-             bgGradient="linear(to-l, #7928CA, #FF0080)"
-             justifyContent={"center"}
-             flexDirection={"row"}
-             display={"flex"}
-             flexWrap={"wrap"}
-             alignItems={"center"}
-        >
-            <InputGroup size="md"
-                        mb={"5"}
-                        display={"flex"}
-                        alignContent={"center"}
+        loadHistory((error, data) => {
+            const {history, room} = data
+            console.log("History loaded: " + history)
+            if (error) {
+                console.log("error getting data from chat")
+                return
+            }
+            if (room && history) {
+                setChat(history)
+            }
+        })
+
+        subscribeToChat((error, data: chatItem) => {
+            if (error) {
+                console.log("error getting data from chat")
+                return
+            }
+            setChat(oldChats => [...oldChats, data])
+        })
+
+        return () => {
+            disconnectSocket();
+        }
+    }, [room, auth])
+
+    const submitMessageHandler = async (values: { message: string }, actions: FormikHelpers<{ message: string }>) => {
+        if (room) sendMessage(room.id, values.message)
+        actions.resetForm()
+    }
+
+    return (
+        <React.Fragment>
+            <Box w="100%"
+                 bgGradient="linear(to-l, #7928CA, #FF0080)"
+                 justifyContent={"center"}
+                 flexDirection={"row"}
+                 display={"flex"}
+                 flexWrap={"wrap"}
+                 alignItems={"center"}
             >
-                <Input
-                    p={"5"}
-                    m={"5"}
-                    variant="unstyled"
-                    lineHeight={"1"}
-                    color={"#001"}
-                    fontSize="6xl"
-                    fontWeight="extrabold"
-                    textAlign={"center"}
-                    id="chatRoomName"
-                    value={room?.name}
-                    name={"name"}
-                    onInput={roomChangeHandler}
-                />
-                <InputRightElement width="4.5rem"
-                                   p={"5"}
-                                   m={"5"}
+                <InputGroup size="md"
+                            mb={"5"}
+                            display={"flex"}
+                            alignContent={"center"}
                 >
-                    <Popover
-                        isOpen={isOpen}
-                        onOpen={onOpen}
-                        onClose={onClose}
-                        placement="bottom"
+                    <Input
+                        p={"5"}
+                        m={"5"}
+                        variant="unstyled"
+                        lineHeight={"1"}
+                        color={"#EFF"}
+                        fontSize="6xl"
+                        fontWeight="extrabold"
+                        textAlign={"center"}
+                        id="chatRoomName"
+                        value={room?.name}
+                        name={"name"}
+                        onInput={roomChangeHandler}
+                    />
+                    <InputRightElement width="4.5rem"
+                                       p={"5"}
+                                       m={"5"}
                     >
-                        <PopoverTrigger>
-                            <IconButton
-                                variant="ghost"
-                                colorScheme="blackAlpha"
-                                color={"#005"}
-                                aria-label="Settings"
-                                fontSize="30px"
-                                icon={<SettingsIcon/>}
-                            />
-                        </PopoverTrigger>
-                        <Portal>
-                            <PopoverContent>
-                                <PopoverArrow/>
-                                <PopoverHeader>Edit Chat Room</PopoverHeader>
-                                <PopoverCloseButton/>
-                                <PopoverBody>
-                                    <EditRoom closeHandler={onClose}
-                                              completeHandler={updateRoomLocally}
-                                              name={room?.name}
-                                              description={(room?.description || "")}
-                                              id={room?.id}
-                                    />
-                                    <Button onClick={deleteHandler}>DELETE ROOM</Button>
-                                </PopoverBody>
-                            </PopoverContent>
-                        </Portal>
-                    </Popover>
-                </InputRightElement>
-            </InputGroup>
-        </Box>
-        <Box>
-            <Text
-                m={"5"}
-                bgGradient="linear(to-l, #7928CA,#FF0080)"
-                bgClip="text"
-                fontSize="xl"
-                fontWeight="extrabold"
+                        <Popover
+                            isOpen={isOpen}
+                            onOpen={onOpen}
+                            onClose={onClose}
+                            placement="bottom"
+                        >
+                            <PopoverTrigger>
+                                <IconButton
+                                    variant="ghost"
+                                    colorScheme="blackAlpha"
+                                    color={"#FEE"}
+                                    aria-label="Settings"
+                                    fontSize="30px"
+                                    icon={<SettingsIcon/>}
+                                />
+                            </PopoverTrigger>
+                            <Portal>
+                                <PopoverContent>
+                                    <PopoverArrow/>
+                                    <PopoverHeader>Edit Chat Room</PopoverHeader>
+                                    <PopoverCloseButton/>
+                                    <PopoverBody>
+                                        <EditRoom closeHandler={onClose}
+                                                  completeHandler={updateRoomLocally}
+                                                  name={room?.name}
+                                                  description={(room?.description || "")}
+                                                  id={room?.id}
+                                        />
+                                        <Button onClick={deleteRoomHandler}>DELETE ROOM</Button>
+                                    </PopoverBody>
+                                </PopoverContent>
+                            </Portal>
+                        </Popover>
+                    </InputRightElement>
+                </InputGroup>
+            </Box>
+            <Box>
+                <Text
+                    m={"5"}
+                    bgGradient="linear(to-l, #7928CA,#FF0080)"
+                    bgClip="text"
+                    fontSize="xl"
+                    fontWeight="extrabold"
+                >
+                    {room?.description ? '"' + room?.description + '"' : "What's on your mind?"}
+                </Text>
+            </Box>
+            <Box zIndex={"10"}
+                 display={"flex"}
+                 flexDirection={"column"}
+                 height={"100%"}
+                 justifyContent={"center"}
+
             >
-                {room?.description ? '"' + room?.description + '"' : "What's on your mind?"}
-            </Text>
-        </Box>
-    </React.Fragment>
-)
+                <Box
+                     overflow={"scroll"}
+                     position={"relative"}
+                     flex={"1 1 0"}
+                     overflowX={"hidden"}
+                >
+                    <ChatFeed chatItems={chat} currentUser={auth.userId}/>
+                </Box>
+                <Box
+                     position={"relative"}
+                     flex={"none"}
+                     display={"flex"}
+                     alignSelf={"center"}
+                >
+                    <ChatInput submitMessage={submitMessageHandler}/>
+                </Box>
+            </Box>
+        </React.Fragment>
+    )
 }
 
 export default ChatRoom

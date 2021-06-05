@@ -36,7 +36,7 @@ function App() {
         >
             <BrowserRouter>
                 <div className={"gameWrapper"}>
-                    <img src={backgroundRight} alt={"background gradient"} className={"bgImgRight"}/>
+                    {/*<img src={backgroundRight} alt={"background gradient"} className={"bgImgRight"}/>*/}
                     <img src={backgroundLeft} alt={"background gradient"} className={"bgImgLeft"}/>
                     <img src={backgroundLeftLow} alt={"background gradient"} className={"bgImgLeftLow"}/>
                     <p/>
@@ -74,7 +74,8 @@ function App() {
                             <JoinGame/>
                         </Route>
                         <Route exact path="/">
-                            <HomePage/>
+                            <Login/>
+                            {/*<HomePage/>*/}
                         </Route>
                         <Route path="/">
                             <p>Error 404 - Page not found</p>

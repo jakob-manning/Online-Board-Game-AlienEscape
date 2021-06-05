@@ -3,13 +3,11 @@ import {
     Box,
     Text,
     Button,
-    Link,
     FormControl,
     FormLabel,
     Input,
     FormErrorMessage,
     InputGroup,
-    InputRightElement,
     InputRightAddon, useToast
 } from "@chakra-ui/react";
 import {ArrowForwardIcon} from '@chakra-ui/icons'
@@ -118,7 +116,6 @@ const ReactFunctionalComponent: React.FC = () => {
                     </Button>
                 )}
             </Box>
-            <Box></Box>
             {chat.map((item, index) => {
                 return(
                     <Box>
@@ -130,7 +127,7 @@ const ReactFunctionalComponent: React.FC = () => {
                             fontWeight="extrabold"
                             key={index}
                         >
-                            {item.name + " says: "}
+                            {item.userName + " says: "}
                         </Text>
                         <Text
                             m={"0"}

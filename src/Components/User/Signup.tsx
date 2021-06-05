@@ -26,7 +26,7 @@ interface MyFormValues {
     password: string;
 }
 
-const SignUp: React.FC = (props) => {
+const SignUp: React.FC = () => {
     const auth = useContext(AuthContext);
     const [showPassword, setShowPassword] = React.useState(false)
     const history = useHistory()
@@ -170,7 +170,7 @@ const SignUp: React.FC = (props) => {
                 fontSize="xl"
                 fontWeight="extrabold"
             >
-                Want to play a game? ...
+                You look like you just arrived... Welcome!
             </Text>
 
             <Formik
@@ -225,7 +225,7 @@ const SignUp: React.FC = (props) => {
                         <Box m={"3"} pb={"6"}>
                             <Button
                                 mt={4}
-                                colorScheme="teal"
+                                colorScheme="pink"
                                 isLoading={props.isSubmitting}
                                 type="submit"
                             >

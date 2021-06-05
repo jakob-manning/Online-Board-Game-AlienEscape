@@ -7,23 +7,17 @@ import {
     Popover, PopoverTrigger, PopoverBody,
     PopoverCloseButton, PopoverHeader, PopoverArrow,
     PopoverContent,
-    CloseButton,
     useDisclosure,
 } from "@chakra-ui/react";
 import {useHistory} from 'react-router-dom';
-import axios from "axios"
 
 import {AuthContext} from '../../context/auth-context';
 import {chatRoom, Toast} from "../../types/types";
-import {Container} from "react-bootstrap";
 import CreateRoom from "./CreateRoom";
 import {useHttpClient} from "../../hooks/http-hook";
 
-const {REACT_APP_BACKEND} = process.env;
-
 const ChatRooms: React.FC = (props) => {
-    const auth = useContext(AuthContext);
-    const {isLoading, error, sendRequest, clearError} = useHttpClient()
+    const {sendRequest} = useHttpClient()
     const [rooms, setRooms] = React.useState<chatRoom[]>([])
     const history = useHistory()
     const {onOpen, onClose, isOpen} = useDisclosure()
@@ -67,7 +61,7 @@ const ChatRooms: React.FC = (props) => {
             >
                 <Text
                     m={"5"}
-                    bgGradient="linear(to-l, #008,#000)"
+                    bgGradient="linear(to-l, #e0e1ff, #ffe0e5)"
                     bgClip="text"
                     fontSize="6xl"
                     fontWeight="extrabold"

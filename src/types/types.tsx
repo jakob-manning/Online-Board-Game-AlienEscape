@@ -22,8 +22,9 @@ export interface gameState {
 }
 
 export interface chatItem {
+    id:string
     userID: string,
-    name: string,
+    userName: string,
     message: string
 }
 

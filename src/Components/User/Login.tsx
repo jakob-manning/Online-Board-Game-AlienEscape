@@ -24,7 +24,7 @@ interface MyFormValues {
     password: string;
 }
 
-const Login: React.FC = (props) => {
+const Login: React.FC = () => {
     const auth = useContext(AuthContext);
     const [showPassword, setShowPassword] = React.useState(false)
     const history = useHistory()
@@ -74,7 +74,7 @@ const Login: React.FC = (props) => {
                 })
                 actions.setSubmitting(false)
                 auth.login(response.data.userId, response.data.token, null);
-                return history.push("/profile")
+                return history.push("/chat")
             }
             else {
                 toast({
@@ -158,7 +158,7 @@ const Login: React.FC = (props) => {
                 fontSize="xl"
                 fontWeight="extrabold"
             >
-                Come out, come out, wherever you are...
+                Welcome back cool cat 🐱
             </Text>
 
             <Formik
@@ -203,7 +203,7 @@ const Login: React.FC = (props) => {
                         <Box m={"3"} pb={"6"}>
                             <Button
                                 mt={4}
-                                colorScheme="teal"
+                                colorScheme="pink"
                                 isLoading={props.isSubmitting}
                                 type="submit"
                             >
