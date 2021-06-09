@@ -1,6 +1,7 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {
     Box,
+    Center,
     Text,
     IconButton,
     Button,
@@ -24,6 +25,8 @@ import EditRoom from "./EditRoom";
 import ChatFeed from "./ChatFeed";
 import {AuthContext} from "../../context/auth-context";
 import ChatInput from "./ChatInput";
+import NotificationHandler from "./NotificationHandler";
+import Header from "../UI/Header";
 
 interface RouteParams {
     chatRoomName: string
@@ -129,7 +132,7 @@ const ChatRoom: React.FC = (props) => {
             }
         })
 
-        subscribeToChat((error, data: chatItem) => {
+        subscribeToChat(auth.userId, (error, data: chatItem) => {
             if (error) {
                 console.log("error getting data from chat")
                 return
@@ -147,106 +150,69 @@ const ChatRoom: React.FC = (props) => {
         actions.resetForm()
     }
 
+    const settingsButton = (
+        <Popover
+            isOpen={isOpen}
+            onOpen={onOpen}
+            onClose={onClose}
+            placement="bottom-start"
+        >
+            <PopoverTrigger>
+                <IconButton
+                    variant="ghost"
+                    colorScheme="blackAlpha"
+                    color={"#FEE"}
+                    aria-label="Settings"
+                    fontSize="30px"
+                    icon={<SettingsIcon/>}
+                />
+            </PopoverTrigger>
+            <Portal>
+                <PopoverContent>
+                    <PopoverArrow/>
+                    <PopoverHeader>Edit Chat Room</PopoverHeader>
+                    <PopoverCloseButton/>
+                    <PopoverBody>
+                        <EditRoom closeHandler={onClose}
+                                  completeHandler={updateRoomLocally}
+                                  name={room?.name}
+                                  description={(room?.description || "")}
+                                  id={room?.id}
+                        />
+                        <Button onClick={deleteRoomHandler}>DELETE ROOM</Button>
+                    </PopoverBody>
+                </PopoverContent>
+            </Portal>
+        </Popover>)
+
     return (
         <React.Fragment>
-            <Box w="100%"
-                 bgGradient="linear(to-l, #7928CA, #FF0080)"
-                 justifyContent={"center"}
-                 flexDirection={"row"}
-                 display={"flex"}
-                 flexWrap={"wrap"}
-                 alignItems={"center"}
+            <Box
+                display={"flex"}
+                flexDirection={"column"}
+                height={"100%"}
+                justifyContent={"center"}
             >
-                <InputGroup size="md"
-                            mb={"5"}
-                            display={"flex"}
-                            alignContent={"center"}
-                >
-                    <Input
-                        p={"5"}
-                        m={"5"}
-                        variant="unstyled"
-                        lineHeight={"1"}
-                        color={"#EFF"}
-                        fontSize="6xl"
-                        fontWeight="extrabold"
-                        textAlign={"center"}
-                        id="chatRoomName"
-                        value={room?.name}
-                        name={"name"}
-                        onInput={roomChangeHandler}
-                    />
-                    <InputRightElement width="4.5rem"
-                                       p={"5"}
-                                       m={"5"}
-                    >
-                        <Popover
-                            isOpen={isOpen}
-                            onOpen={onOpen}
-                            onClose={onClose}
-                            placement="bottom"
-                        >
-                            <PopoverTrigger>
-                                <IconButton
-                                    variant="ghost"
-                                    colorScheme="blackAlpha"
-                                    color={"#FEE"}
-                                    aria-label="Settings"
-                                    fontSize="30px"
-                                    icon={<SettingsIcon/>}
-                                />
-                            </PopoverTrigger>
-                            <Portal>
-                                <PopoverContent>
-                                    <PopoverArrow/>
-                                    <PopoverHeader>Edit Chat Room</PopoverHeader>
-                                    <PopoverCloseButton/>
-                                    <PopoverBody>
-                                        <EditRoom closeHandler={onClose}
-                                                  completeHandler={updateRoomLocally}
-                                                  name={room?.name}
-                                                  description={(room?.description || "")}
-                                                  id={room?.id}
-                                        />
-                                        <Button onClick={deleteRoomHandler}>DELETE ROOM</Button>
-                                    </PopoverBody>
-                                </PopoverContent>
-                            </Portal>
-                        </Popover>
-                    </InputRightElement>
-                </InputGroup>
-            </Box>
-            <Box>
-                <Text
-                    m={"5"}
-                    bgGradient="linear(to-l, #7928CA,#FF0080)"
-                    bgClip="text"
-                    fontSize="xl"
-                    fontWeight="extrabold"
-                >
-                    {room?.description ? '"' + room?.description + '"' : "What's on your mind?"}
-                </Text>
-            </Box>
-            <Box zIndex={"10"}
-                 display={"flex"}
-                 flexDirection={"column"}
-                 height={"100%"}
-                 justifyContent={"center"}
-
-            >
-                <Box
+                <Header title={room?.name} subtitle={room?.description} rightButton={settingsButton}></Header>
+                <Box alignSelf={"center"}
+                     minW={"50ch"}
                      overflow={"scroll"}
-                     position={"relative"}
                      flex={"1 1 0"}
                      overflowX={"hidden"}
                 >
-                    <ChatFeed chatItems={chat} currentUser={auth.userId}/>
+                <Box
+                    maxW={"50ch"}
+                    m={"2"}
+                >
+                        <ChatFeed chatItems={chat} currentUser={auth.userId}/>
+                    </Box>
                 </Box>
                 <Box
-                     position={"relative"}
-                     flex={"none"}
-                     display={"flex"}
-                     alignSelf={"center"}
+                    position={"relative"}
+                    width={"100%"}
+                    alignSelf={"center"}
+                    maxW={"80ch"}
+                    p={"2"}
                 >
                     <ChatInput submitMessage={submitMessageHandler}/>
                 </Box>

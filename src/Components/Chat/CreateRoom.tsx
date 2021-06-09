@@ -34,6 +34,11 @@ const CreateRoom: React.FC<Props> = (props: Props) => {
         if (value.length > 20) {
             error = "Room name is too long"
         }
+        const letterNumber = /^[0-9a-zA-Z]+$/;
+        if(!value.match(letterNumber))
+        {
+            error = "Only alphanumeric names please"
+        }
         return error
     }
 

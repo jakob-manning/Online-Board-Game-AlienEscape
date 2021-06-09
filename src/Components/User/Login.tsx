@@ -1,6 +1,7 @@
 import React, {useContext} from 'react';
 import {
     Box,
+    Center,
     Text,
     useToast,
     Button,
@@ -8,7 +9,7 @@ import {
     InputRightElement,
     FormControl,
     FormLabel,
-    FormErrorMessage, InputGroup
+    FormErrorMessage, InputGroup,
 } from "@chakra-ui/react";
 import {Formik, Form, Field, FormikProps, FieldProps, FormikHelpers} from "formik";
 import {useHistory} from 'react-router-dom';
@@ -16,6 +17,7 @@ import axios from "axios"
 import isEmail from 'validator/lib/isEmail'
 
 import {AuthContext} from '../../context/auth-context';
+import {Container} from "react-bootstrap";
 
 const { REACT_APP_BACKEND } = process.env;
 
@@ -120,10 +122,12 @@ const Login: React.FC = () => {
                     p={"10"}
                     pb={"12"}
                     lineHeight={2.2}
+
+                    colorScheme={"none"}
                 >
                     <Text
                         m={"5"}
-                        bgGradient="linear(to-l, #008,#000)"
+                        bgGradient="linear(to-l, #e0e1ff, #ffe0e5)"
                         bgClip="text"
                         fontSize="6xl"
                         fontWeight="extrabold"
@@ -138,10 +142,12 @@ const Login: React.FC = () => {
                     pb={"12"}
                     lineHeight={2.2}
                     onClick={() => history.push("/signup")}
+
+                    colorScheme={"none"}
                 >
                     <Text
                         m={"5"}
-                        bgGradient="linear(to-l, #000,#008)"
+                        bgGradient="linear(to-l, #e0e1ff, #ffe0e5)"
                         bgClip="text"
                         fontSize="6xl"
                         opacity={0.3}
@@ -151,6 +157,8 @@ const Login: React.FC = () => {
                     </Text>
                 </Button>
             </Box>
+            <Center>
+            <Box maxW={"50ch"} m={"5"}>
             <Text
                 m={"5"}
                 bgGradient="linear(to-l, #7928CA,#FF0080)"
@@ -183,7 +191,7 @@ const Login: React.FC = () => {
                             {({field, form}: FieldProps) => (
                                 <FormControl isInvalid={!!form.errors.password && !!form.touched.password}>
                                     <FormLabel htmlFor="password">Password</FormLabel>
-                                    <InputGroup size="md" mb={"5"}>
+                                    <InputGroup mb={"5"}>
                                         <Input
                                             {...field}
                                             type={showPassword ? "text" : "password"}
@@ -213,6 +221,8 @@ const Login: React.FC = () => {
                     </Form>
                 )}
             </Formik>
+            </Box>
+            </Center>
         </React.Fragment>
     )
 }

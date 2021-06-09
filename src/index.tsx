@@ -1,11 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import 'mdb-react-ui-kit/dist/css/mdb.min.css'
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {ChakraProvider, extendTheme} from "@chakra-ui/react"
-import {ThemeProvider} from "@material-ui/core/styles";
-import {createMuiTheme} from "@material-ui/core/styles";
 
 // Initialize Chakra Theme
 const colors = {
@@ -17,31 +16,11 @@ const colors = {
 }
 const theme = extendTheme({colors})
 
-// Initialize MUI Theme
-const materialTheme = createMuiTheme({
-    palette: {
-        primary: {
-            dark: "#82488c",
-            light: "#c786d3",
-            main: '#ba68c8',
-        },
-        secondary: {
-            dark: "#b22c5a",
-            light: "#ff669a",
-            main: '#ff4081',
-        },
-        background: {
-            paper: "linear-gradient(to right, tomato, cyan)",
-        }
-    },
-});
 
 ReactDOM.render(
     <React.StrictMode>
         <ChakraProvider>
-            <ThemeProvider theme={materialTheme}>
                 <App/>
-            </ThemeProvider>
         </ChakraProvider>
     </React.StrictMode>,
     document.getElementById('root')

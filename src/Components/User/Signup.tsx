@@ -1,6 +1,7 @@
 import React, {useContext} from 'react';
 import {
     Box,
+    Center,
     Text,
     useToast,
     Button,
@@ -17,6 +18,7 @@ import axios from "axios"
 import isEmail from 'validator/lib/isEmail';
 
 import {AuthContext} from "../../context/auth-context";
+import {Container} from "react-bootstrap";
 
 const {REACT_APP_BACKEND} = process.env;
 
@@ -80,15 +82,15 @@ const SignUp: React.FC = () => {
             console.log(response.data)
             if (response.data) {
                 toast({
-                    title: "You're in.",
-                    description: "Welcome back",
+                    title: "We just sent you an email",
+                    description: "With a special link",
                     status: "success",
                     duration: 2000,
                     isClosable: true,
                 })
                 actions.setSubmitting(false)
                 auth.login(response.data.userId, response.data.token, null);
-                return history.push("/profile")
+                return history.push("/verify")
             } else {
                 toast({
                     title: "Something went wrong.",
@@ -133,10 +135,11 @@ const SignUp: React.FC = () => {
                     pb={"12"}
                     lineHeight={2.2}
                     onClick={() => history.push("/login")}
+                    colorScheme={"none"}
                 >
                     <Text
                         m={"5"}
-                        bgGradient="linear(to-l, #008,#000)"
+                        bgGradient="linear(to-l, #e0e1ff, #ffe0e5)"
                         bgClip="text"
                         fontSize="6xl"
                         opacity={0.3}
@@ -151,10 +154,11 @@ const SignUp: React.FC = () => {
                     p={"10"}
                     pb={"12"}
                     lineHeight={2.2}
+                    colorScheme={"none"}
                 >
                     <Text
                         m={"5"}
-                        bgGradient="linear(to-l, #000,#008)"
+                        bgGradient="linear(to-l, #e0e1ff, #ffe0e5)"
                         bgClip="text"
                         fontSize="6xl"
                         fontWeight="extrabold"
@@ -163,6 +167,8 @@ const SignUp: React.FC = () => {
                     </Text>
                 </Button>
             </Box>
+            <Center>
+            <Box maxW={"50ch"} m={"5"}>
             <Text
                 m={"5"}
                 bgGradient="linear(to-l, #7928CA,#FF0080)"
@@ -235,6 +241,8 @@ const SignUp: React.FC = () => {
                     </Form>
                 )}
             </Formik>
+                </Box>
+            </Center>
         </React.Fragment>
     )
 }

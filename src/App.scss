@@ -61,7 +61,7 @@
   position: absolute;
   top: -100px;
   right: -100px;
-  z-index: 0;
+  z-index: -5;
 
   filter: blur(8px);
   -webkit-filter: blur(8px);
@@ -71,7 +71,7 @@
   position: absolute;
   bottom: 0px;
   left: -10px;
-  z-index: 0;
+  z-index: -5;
   transform: rotate(180deg);
 
   filter: blur(18px);
@@ -82,7 +82,7 @@
   position: absolute;
   top: 0px;
   left: 0px;
-  z-index: 0;
+  z-index: -5;
 }
 
 .gameWrapper {
@@ -94,17 +94,16 @@
   background-color: whitesmoke;
 
   //color: darkgray;
-  color: darkgray;
+  //color: darkgray;
   text-align: center;
   position: absolute;
 
   overflow-x: hidden;
   overflow: -moz-hidden-unscrollable;
 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: flex-start;
+
+  z-index: -10;
 }
 
 .flexGrow {

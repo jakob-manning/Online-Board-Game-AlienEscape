@@ -7,7 +7,7 @@ import {
     Input,
     FormErrorMessage,
     InputGroup,
-    InputRightAddon
+    InputRightElement
 } from "@chakra-ui/react";
 import {ArrowForwardIcon} from '@chakra-ui/icons'
 import {Field, FieldProps, Form, Formik, FormikHelpers, FormikProps} from "formik";
@@ -36,29 +36,28 @@ const ReactFunctionalComponent: React.FC<Props> = (props: Props) => {
                             <FormControl isInvalid={!!form.errors.message && !!form.touched.messsage}>
                                 <FormLabel htmlFor="message"></FormLabel>
                                 <InputGroup size="md"
-                                            p={"2"}
                                 >
                                     <Input
                                         {...field}
+                                        colorScheme="purple"
                                         id="message"
                                         placeholder=""
                                         autocomplete="off"
                                         focusBorderColor={"none"}
                                         m={"0"}
+                                        pr="4.5rem"
                                     />
-                                    <InputRightAddon width="4.5rem">
+                                    <InputRightElement width="4.5rem">
                                         <Button
-                                            variant="ghost"
-                                            colorScheme="teal"
+                                            h="1.75rem"
+                                            variant="solid"
+                                            colorScheme="purple"
                                             isLoading={props.isSubmitting}
                                             type="submit"
-                                            ml={"-3"}
-                                            pl={"8"}
-                                            pr={"8"}
                                         >
                                             <ArrowForwardIcon/>
                                         </Button>
-                                    </InputRightAddon>
+                                    </InputRightElement>
                                 </InputGroup>
                                 <FormErrorMessage>{form.errors.message}</FormErrorMessage>
                             </FormControl>

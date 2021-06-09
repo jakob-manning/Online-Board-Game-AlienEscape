@@ -14,12 +14,10 @@ import JoinGame from "./Components/JoinGame/JoinGame";
 import NewGame from "./Components/NewGame/NewGame";
 import Login from "./Components/User/Login";
 import SignUp from "./Components/User/Signup";
-import HomePage from "./Components/HomePage";
 import Game from "./Components/game/Game";
-import SocketChatRoom from "./Components/User/ChatRooms";
 import ChatRooms from "./Components/Chat/ChatRooms";
 import ChatRoom from "./Components/Chat/ChatRoom";
-
+import VerifyEmail from "./Components/User/VerifyEmail";
 
 function App() {
     const {token, login, logout, userID} = useAuth();
@@ -47,8 +45,8 @@ function App() {
                         <Route path="/signup">
                             <SignUp/>
                         </Route>
-                        <Route path="/profile">
-                            <SocketChatRoom/>
+                        <Route path="/verify">
+                            <VerifyEmail />
                         </Route>
                         <Route path="/chat/:chatRoomName">
                             <ChatRoom />

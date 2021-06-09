@@ -10,12 +10,11 @@ import {
     useDisclosure,
 } from "@chakra-ui/react";
 import {useHistory} from 'react-router-dom';
-
-import {AuthContext} from '../../context/auth-context';
 import {chatRoom, Toast} from "../../types/types";
 import CreateRoom from "./CreateRoom";
 import {useHttpClient} from "../../hooks/http-hook";
-
+import Header from "../UI/Header";
+import {Container} from "react-bootstrap";
 const ChatRooms: React.FC = (props) => {
     const {sendRequest} = useHttpClient()
     const [rooms, setRooms] = React.useState<chatRoom[]>([])
@@ -52,23 +51,8 @@ const ChatRooms: React.FC = (props) => {
 
     return (
         <React.Fragment>
-            <Box w="100%"
-                 bgGradient="linear(to-l, #7928CA, #FF0080)"
-                 justifyContent={"center"}
-                 flexDirection={"row"}
-                 display={"flex"}
-                 flexWrap={"wrap"}
-            >
-                <Text
-                    m={"5"}
-                    bgGradient="linear(to-l, #e0e1ff, #ffe0e5)"
-                    bgClip="text"
-                    fontSize="6xl"
-                    fontWeight="extrabold"
-                >
-                    Chat Rooms
-                </Text>
-            </Box>
+            <Header title={"Chat Rooms"} />
+            <Container>
             <Box
                 display={"flex"}
                 flexDirection={"column"}
@@ -125,7 +109,7 @@ const ChatRooms: React.FC = (props) => {
                             _hover={{bg: "#ebedf0"}}
                             borderWidth={"1px"}
                             onClick={() => roomEnterHandler(room.name)}
-                            zIndex={10}
+                            zIndex={0}
                         >
                             <Text
                                 m={"5"}
@@ -151,6 +135,7 @@ const ChatRooms: React.FC = (props) => {
                 })
                 }
             </Box>
+            </Container>
         </React.Fragment>
     )
 }
