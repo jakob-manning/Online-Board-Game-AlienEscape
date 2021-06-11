@@ -1,0 +1,74 @@
+.roomList {
+    border: 2px solid red;
+    display: none;
+    width: 0;
+}
+
+.roomListVisible {
+    border: 2px solid red;
+    display: initial;
+    width: 100%;
+}
+
+.chatParent{
+    width: 100%;
+    border: 2px solid pink;
+}
+
+.chatParentHidden{
+    display: none;
+    border: 2px solid pink;
+}
+
+.backNav{
+    display: initial;
+    width: 100%;
+}
+
+.backNavHidden{
+    display: none;
+    width: 0;
+}
+
+@media only screen and (min-width: 510px) {
+    .roomList, .roomListVisible {
+        border: 2px solid red;
+        display: initial;
+        width: 40%;
+    }
+
+    .backNav, .backNavHidden{
+        display: none;
+        width: 0;
+        height: 0;
+    }
+
+    .chatParent, .chatParentHidden{
+        display: initial;
+        width: 60%;
+    }
+
+}
+
+@media only screen and (min-width: 900px) {
+    .roomList, .roomListVisible {
+        width: 35%;
+    }
+
+    .chatParent, .chatParentHidden{
+        width: 65%;
+        min-width: 500px;
+    }
+
+}
+
+@media only screen and (min-width: 1400px) {
+    .roomList, .roomListVisible {
+        width: 25%;
+    }
+
+    .chatParent, .chatParentHidden{
+        width: 60%;
+    }
+
+}

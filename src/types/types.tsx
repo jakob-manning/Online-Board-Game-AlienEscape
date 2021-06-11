@@ -25,19 +25,31 @@ export interface chatItem {
     id:string
     userID: string,
     userName: string,
-    message: string
+    message: string,
+    timeStamp?: Date,
+}
+
+export type roomID = string
+
+export interface membersDict {
+    [roomID: string]: boolean;
 }
 
 export interface chatRoom {
-    id: string,
+    id: roomID,
     name: string,
     description?: string,
     dateCreated: Date,
-    lastUsed: Date,
+    lastUpdated: Date,
+    updatedBy: string,
+    lastSeen: Date,
     creator: string,
     owners?: string[],
     members?: string[],
     password?: string,
+    admin?:string[],
+    messages: chatItem[],
+    membersRead: membersDict
 }
 
 export interface Toast {
@@ -50,4 +62,13 @@ export interface Toast {
     errorTitle?: string
     errorFallBack?: string
     errorStatus?: "error" | "info" | "warning" | "success"
+}
+
+export interface chatPayload {
+    newMessage: chatItem
+    room: roomID
+}
+
+export interface roomDict {
+    [index: string]: chatRoom;
 }

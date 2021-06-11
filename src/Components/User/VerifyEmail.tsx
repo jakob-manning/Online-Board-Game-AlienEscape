@@ -1,16 +1,8 @@
 import React from 'react';
 import {
     Box,
-    Button,
-    FormControl,
-    FormErrorMessage,
-    FormLabel,
-    Input,
-    InputGroup,
-    InputRightElement,
     Text
 } from "@chakra-ui/react";
-import {Field, FieldProps, Form, Formik, FormikProps} from "formik";
 
 const VerifyEmail: React.FC = () => {
 

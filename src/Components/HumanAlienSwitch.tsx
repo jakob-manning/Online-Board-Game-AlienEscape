@@ -1,5 +1,8 @@
 import React, {useState} from "react";
-import {Button, ButtonGroup, ToggleButton} from "react-bootstrap";
+import {
+    Button,
+    ButtonGroup
+} from "@chakra-ui/react";
 
 
 const HumanAlienSwitch: React.FC = () => {

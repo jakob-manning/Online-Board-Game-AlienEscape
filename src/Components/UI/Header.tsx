@@ -4,6 +4,7 @@ import {
     Box,
     Text,
     IconButton,
+    Container,
     Flex,
     Spacer,
     PopoverTrigger,
@@ -18,7 +19,6 @@ import {
 import {FiSettings} from "react-icons/all";
 
 import Menu from "./Menu";
-import {Container} from "react-bootstrap";
 
 interface Props {
     title: string | undefined

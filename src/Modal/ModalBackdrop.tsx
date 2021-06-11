@@ -1,5 +1,4 @@
-import React, {MouseEventHandler, useState} from 'react';
-import {Card, CardDeck, Modal, Button} from "react-bootstrap";
+import React, {MouseEventHandler} from 'react';
 import "./modal.css"
 
 interface Props {

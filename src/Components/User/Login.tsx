@@ -17,7 +17,6 @@ import axios from "axios"
 import isEmail from 'validator/lib/isEmail'
 
 import {AuthContext} from '../../context/auth-context';
-import {Container} from "react-bootstrap";
 
 const { REACT_APP_BACKEND } = process.env;
 

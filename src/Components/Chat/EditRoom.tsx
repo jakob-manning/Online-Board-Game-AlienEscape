@@ -1,6 +1,5 @@
 import {
     Box,
-    Text,
     Button,
     Input,
     FormControl,
@@ -11,18 +10,16 @@ import {Formik, Form, Field, FormikProps, FieldProps, FormikHelpers} from "formi
 import {useHttpClient} from "../../hooks/http-hook";
 import {Toast} from "../../types/types";
 
-const {REACT_APP_BACKEND} = process.env;
-
 interface MyFormValues {
     description: string;
 }
 
 interface Props {
     closeHandler: Function;
-    completeHandler: Function;
     name: string | undefined;
     description: string;
     id: string | undefined;
+    updateRoomDescription: Function
 }
 
 const EditRoom: React.FC<Props> = (props: Props) => {
@@ -30,7 +27,7 @@ const EditRoom: React.FC<Props> = (props: Props) => {
 
     function validateDescription(value: string) {
         let error
-        if (value.length > 20) {
+        if (value.length > 250) {
             error = "Slow down Shakespeare, that's too many characters."
         }
         return error
@@ -55,9 +52,9 @@ const EditRoom: React.FC<Props> = (props: Props) => {
             }
             response = await sendRequest("patch", "/api/chat/" + props.id, toast, body)
             if (response.data) {
-                props.completeHandler()
                 actions.resetForm()
                 actions.setSubmitting(false)
+                props.updateRoomDescription(body.description)
                 return props.closeHandler()
             }
         } catch (e) {

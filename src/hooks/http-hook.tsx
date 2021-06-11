@@ -40,7 +40,7 @@ export const useHttpClient = () => {
                     headers: {authorization: "bearer " + auth.token}
                 })
                 if(response.data){
-                    if(toastContent.mode != "mute" && toastContent.successMode != "mute"){
+                    if(toastContent.mode !== "mute" && toastContent.successMode !== "mute"){
                         toast({
                             title: toastContent.successTitle || "Success!",
                             description:  toastContent.successBody || "yippee ki yay!",
@@ -51,7 +51,7 @@ export const useHttpClient = () => {
                     }
                 }
                 else {
-                    if(toastContent.mode != "mute" && toastContent.errorMode != "mute"){
+                    if(toastContent.mode !== "mute" && toastContent.errorMode !== "mute"){
                         toast({
                             title: (toastContent.errorTitle || "Uh Oh!"),
                             description: (toastContent.errorFallBack || "Something went wrong behind the scenes. Please try again."),
@@ -69,7 +69,7 @@ export const useHttpClient = () => {
                 setIsLoading(false);
                 return response;
             } catch (e) {
-                if(toastContent.mode != "mute" && toastContent.errorMode != "mute"){
+                if(toastContent.mode !== "mute" && toastContent.errorMode !== "mute"){
                     toast({
                         title: (toastContent.errorTitle || "Uh Oh!"),
                         description: (e.response?.data?.message ||  toastContent.errorFallBack || "Something went wrong behind the scenes. Please try again."),
@@ -82,7 +82,7 @@ export const useHttpClient = () => {
                 setError(e.message);
                 throw e;
             }
-        }, [])
+        }, [auth, toast])
 
     const clearError = () => {
         setError(null)

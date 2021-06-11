@@ -1,13 +1,10 @@
 import React, {useState} from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import {Container, Card} from "react-bootstrap";
-import cardBackMovement from "../../Images/cardBackMovement.jpg"
+import {Container} from "@chakra-ui/react"
 import chooser from "random-seed-weighted-chooser";
 import {cardInterface, itemInterface} from "../../types/types";
 import {possibleCards} from "../gamePieces/actionCards"
 import {possibleItems} from "../gamePieces/itemCards";
 import UsersCurrentItems from "../Items/UsersCurrentItems";
-import CenteredCardModal from "../../Modal/CenteredCardModal";
 import useStickyState from "../../hooks/useStickyState";
 import {useParams} from 'react-router-dom';
 import {Box, Text} from "@chakra-ui/react";
@@ -92,19 +89,19 @@ function Game() {
                 </Text>
             </Box>
 
-            {cardDisplayed ? <CenteredCardModal title={cardDisplayed.title}
-                                                description={cardDisplayed.description}
-                                                image={cardDisplayed.image}
-                                                show={cardDisplayed != null}
-                                                onHide={() => closeCard()}
-                                                item={cardDisplayed.item}
-            /> : null}
+            {/*{cardDisplayed ? <CenteredCardModal title={cardDisplayed.title}*/}
+            {/*                                    description={cardDisplayed.description}*/}
+            {/*                                    image={cardDisplayed.image}*/}
+            {/*                                    show={cardDisplayed != null}*/}
+            {/*                                    onHide={() => closeCard()}*/}
+            {/*                                    item={cardDisplayed.item}*/}
+            {/*/> : null}*/}
             <Container className={"centerFlex"}>
                 <div className="cardBackWrapper">
                     {/*<Button block as={"h1"} onClick={() => generateCard()} variant={"outline-primary"}>Draw</Button>*/}
-                    <Card border={"dark"} onClick={() => generateCard()}>
-                        <Card.Img src={cardBackMovement} alt="Card back"/>
-                    </Card>
+                    {/*<Card border={"dark"} onClick={() => generateCard()}>*/}
+                    {/*    <Card.Img src={cardBackMovement} alt="Card back"/>*/}
+                    {/*</Card>*/}
                 </div>
             </Container>
             <div className={"flexGrow"}>

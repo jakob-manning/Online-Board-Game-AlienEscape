@@ -1,15 +1,14 @@
 import io, {Socket} from 'socket.io-client';
 import {DefaultEventsMap} from 'socket.io-client/build/typed-events';
 
-import {chatItem} from "../types/types"
+import {chatPayload, roomID} from "../types/types"
 import favicon from "../Images/android-chrome-512x512.png";
-import {useContext} from "react";
 
 const {REACT_APP_BACKEND} = process.env;
 
 let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
 
-export const initiateSocket = (room: string, token: string | null, errorCallBack: (error: Error)=> void) => {
+export const initiateSocket = (token: string | null, errorCallBack: (error: Error)=> void) => {
 
     socket = io(REACT_APP_BACKEND + '',
         {
@@ -17,7 +16,7 @@ export const initiateSocket = (room: string, token: string | null, errorCallBack
         }
     );
     console.log(`Connecting socket...`);
-    if (socket && room) socket.emit('join', room);
+    // if (socket && room) socket.emit('join', room);
 
     socket.on("connect_error", (err) => {
         console.log("connection error:");
@@ -30,6 +29,11 @@ export const initiateSocket = (room: string, token: string | null, errorCallBack
         errorCallBack(err)
     });
 }
+
+export const joinRoom = (room: string) => {
+    if (socket && room) socket.emit('join', room);
+}
+
 export const loadHistory = (cb: (error: any, data: any) => void) => {
     if (!socket) return (true)
     socket.on('roomHistory', data => cb(null, data))
@@ -40,22 +44,27 @@ export const disconnectSocket = () => {
     if (socket) socket.disconnect();
 }
 
-export const subscribeToChat = (userID: string | null, cb: (error: any, data: chatItem) => void) => {
-    if (!socket) return (true);
-    socket.on('chat', data => {
+export const subscribeToChat = (userID: string | null, cb: (error: Error | null, data: chatPayload | null) => void) => {
+    if (!socket) return cb(new Error("Couldn't connect to chat."), null);
+    socket.on('chat', (payload: chatPayload) => {
         console.log('Websocket event received!');
 
+        const{newMessage, room} = payload
         // Display a notification if the message isn't from you
-        if(data.userID !== userID){
-            new Notification(data.userName, {
-                body: data.message,
+        if(newMessage.userID !== userID){
+            new Notification(newMessage.userName, {
+                body: newMessage.message,
                 icon: favicon,
             });
         }
-        return cb(null, data);
+        return cb(null, payload);
     });
 }
 
-export const sendMessage = (room: string, message: string) => {
+export const sendMessage = (room: roomID, message: string) => {
     if (socket) socket.emit('chat', {message, room});
+}
+
+export const markAsRead = (room: roomID) => {
+    if (socket) socket.emit("markAsRead", {room})
 }

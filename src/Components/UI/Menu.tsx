@@ -1,16 +1,13 @@
 import React, {useContext} from 'react';
 
 import {
-    Box,
-    Text,
     Menu as ChakraMenu, MenuButton, MenuList, MenuItem, MenuGroup, MenuDivider,
     IconButton,
     Icon,
-    Flex, Spacer
 } from "@chakra-ui/react";
-import {HamburgerIcon, ChatIcon} from '@chakra-ui/icons'
+import {ChatIcon} from '@chakra-ui/icons'
 
-import {FiLogOut, VscAccount, IoMenuSharp} from "react-icons/all";
+import {FiLogOut, VscAccount, HiDotsVertical} from "react-icons/all";
 import {useHistory} from "react-router-dom";
 import {AuthContext} from "../../context/auth-context";
 
@@ -35,7 +32,7 @@ const Menu: React.FC = () => {
             <MenuButton
                 as={IconButton}
                 aria-label="Options"
-                icon={<Icon as={IoMenuSharp} boxSize={8} />}
+                icon={<Icon as={HiDotsVertical} boxSize={7} />}
                 color={"white"}
                 variant="ghost"
             />

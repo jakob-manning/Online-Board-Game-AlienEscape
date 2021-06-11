@@ -1,87 +1,61 @@
 import React, {useContext, useEffect, useState} from 'react';
 import {
     Box,
-    Center,
-    Text,
     IconButton,
     Button,
     Portal,
     Popover, PopoverTrigger, PopoverBody,
     PopoverCloseButton, PopoverHeader, PopoverArrow,
     PopoverContent,
-    useDisclosure, Input, InputRightElement, InputGroup, useToast,
+    useDisclosure, useToast,
 } from "@chakra-ui/react";
-import {SettingsIcon} from '@chakra-ui/icons'
+import {SettingsIcon, ArrowLeftIcon} from '@chakra-ui/icons'
 import {FormikHelpers} from "formik";
 
-import {useHistory, useParams} from 'react-router-dom';
-import {chatItem, chatRoom, Toast} from "../../types/types";
+import {chatItem, chatPayload, chatRoom, roomDict, Toast} from "../../types/types";
 import {useHttpClient} from "../../hooks/http-hook";
-import {
-    initiateSocket, disconnectSocket,
-    subscribeToChat, sendMessage, loadHistory
-} from '../../hooks/socket-hook';
 import EditRoom from "./EditRoom";
 import ChatFeed from "./ChatFeed";
 import {AuthContext} from "../../context/auth-context";
 import ChatInput from "./ChatInput";
-import NotificationHandler from "./NotificationHandler";
 import Header from "../UI/Header";
+import {useHotkeys} from "react-hotkeys-hook";
+import RoomList from "./RoomList";
+import classes from "./ChatRoom.module.css"
+import SmallHeader from "../UI/SmallHeader";
 
 interface RouteParams {
-    chatRoomName: string
+    chatRoomID: string
 }
 
-const ChatRoom: React.FC = (props) => {
+interface Props {
+    closeRoom: Function
+    submitMessage: Function
+    room: chatRoom
+    rooms: roomDict
+    setRoom: Function
+}
+
+const ChatRoom: React.FC<Props> = (props: Props) => {
     const toast = useToast()
+    const {onOpen, onClose, isOpen} = useDisclosure()
     const auth = useContext(AuthContext);
     const {sendRequest} = useHttpClient()
-    const history = useHistory()
     const [room, setRoom] = React.useState<chatRoom | undefined>(undefined)
     const [chat, setChat] = useState<chatItem[]>([]);
-    const {onOpen, onClose, isOpen} = useDisclosure()
 
-    const chatRoomName = useParams<RouteParams>().chatRoomName;
-
-    const initialLoadHandler = async () => {
-        try {
-            let toast: Toast = {
-                successMode: "mute",
-                errorTitle: "Hmmmm...",
-                errorFallBack: "Couldn't load this chat room. Try refreshing your page or buying a new computer.",
-                errorStatus: "info"
-            }
-
-            let response = await sendRequest("get", "/api/chat/byName/" + chatRoomName, toast)
-
-            if (response.data.room) {
-                // load to state
-                setRoom(response.data.room)
-            }
-        } catch (e) {
-            console.log(e)
-        }
-    }
-
-    // Request rooms on page load
     useEffect(() => {
-        initialLoadHandler()
-    }, [])
+        setRoom(props.room)
+        setChat(props.room.messages)
+    }, [props])
 
-    const roomChangeHandler = async (event: React.ChangeEvent<HTMLInputElement>) => {
-        event.preventDefault()
-        const source = event.target.name
-        const value = event.target.value
-        if (source) {
-            // @ts-ignore
-            setRoom({...room, [source]: value})
-        }
-        return
+    const submitMessageHandler = (values: { message: string }, actions: FormikHelpers<{ message: string }>) => {
+        props.submitMessage(room?.id, values.message)
+        actions.resetForm()
     }
 
-    const updateRoomLocally = () => {
-        // TODO: update state so component matches changes sent to server
-        return
+    const updateRoomDescription = (description: string) => {
+        if (room) setRoom({...room, description})
     }
 
     const deleteRoomHandler = async () => {
@@ -100,55 +74,16 @@ const ChatRoom: React.FC = (props) => {
                 toast
             )
             // redirect to chat lobby
-            return history.push("/chat/")
+            return props.closeRoom
         } catch (e) {
             console.log(e)
         }
     }
 
-    const errorHandler = (error: Error) => {
-        toast({
-            title: "Oppsie-daisy.",
-            description: (error.message || "Something went wrong, please make like Brexit and try again."),
-            status: "error",
-            duration: 3000,
-            isClosable: true,
-        })
-        return
-    }
-
-    useEffect(() => {
-        if (room) initiateSocket(room.id, auth.token, errorHandler)
-
-        loadHistory((error, data) => {
-            const {history, room} = data
-            console.log("History loaded: " + history)
-            if (error) {
-                console.log("error getting data from chat")
-                return
-            }
-            if (room && history) {
-                setChat(history)
-            }
-        })
-
-        subscribeToChat(auth.userId, (error, data: chatItem) => {
-            if (error) {
-                console.log("error getting data from chat")
-                return
-            }
-            setChat(oldChats => [...oldChats, data])
-        })
-
-        return () => {
-            disconnectSocket();
-        }
-    }, [room, auth])
-
-    const submitMessageHandler = async (values: { message: string }, actions: FormikHelpers<{ message: string }>) => {
-        if (room) sendMessage(room.id, values.message)
-        actions.resetForm()
-    }
+    useHotkeys("alt+left", (event) => {
+        event.preventDefault()
+        props.closeRoom()
+    })
 
     const settingsButton = (
         <Popover
@@ -174,10 +109,10 @@ const ChatRoom: React.FC = (props) => {
                     <PopoverCloseButton/>
                     <PopoverBody>
                         <EditRoom closeHandler={onClose}
-                                  completeHandler={updateRoomLocally}
                                   name={room?.name}
                                   description={(room?.description || "")}
                                   id={room?.id}
+                                  updateRoomDescription={updateRoomDescription}
                         />
                         <Button onClick={deleteRoomHandler}>DELETE ROOM</Button>
                     </PopoverBody>
@@ -193,28 +128,67 @@ const ChatRoom: React.FC = (props) => {
                 height={"100%"}
                 justifyContent={"center"}
             >
-                <Header title={room?.name} subtitle={room?.description} rightButton={settingsButton}></Header>
-                <Box alignSelf={"center"}
-                     minW={"50ch"}
-                     overflow={"scroll"}
+                <SmallHeader title={room?.name}
+                             subtitle={room?.description}
+                             rightButton={settingsButton}></SmallHeader>
+                <Box d={"flex"}
+                     flexDirection={"row"}
                      flex={"1 1 0"}
-                     overflowX={"hidden"}
+                     alignSelf={"center"}
+                     justifyContent={"center"}
+
+
+                     width={"100%"}
+                     border={"2px solid green"}
                 >
-                <Box
-                    maxW={"50ch"}
-                    m={"2"}
-                >
-                        <ChatFeed chatItems={chat} currentUser={auth.userId}/>
+                    <Box className={classes.roomList}
+                         pr={"5"}
+                    >
+                        <RoomList currentUser={auth.userId as string}
+                                  currentRoom={props.room.id}
+                                  roomDict={props.rooms}
+                                  setRoom={setRoom}
+                        />
                     </Box>
-                </Box>
-                <Box
-                    position={"relative"}
-                    width={"100%"}
-                    alignSelf={"center"}
-                    maxW={"80ch"}
-                    p={"2"}
-                >
-                    <ChatInput submitMessage={submitMessageHandler}/>
+                    <Box d={"flex"}
+                         flexDirection={"column"}
+                         className={classes.chatParent}
+                    >
+                        <Box width={"100%"}
+                             className={classes.backNav}
+                        >
+                            <Box d={"flex"}
+                                 alignItems={"flex-start"}>
+                                <IconButton onClick={() => props.closeRoom()}
+                                            aria-label="Search database"
+                                            icon={<ArrowLeftIcon />}
+                                            width={"10ch"}
+                                            colorScheme="purple"
+                                            variant={"ghost"}
+                                />
+                            </Box>
+                        </Box>
+                        <Box alignSelf={"center"}
+                             overflow={"scroll"}
+                             flex={"1 1 0"}
+                             overflowX={"hidden"}
+
+                             width={"100%"}
+                             border={"2px solid red"}
+                        >
+                            <ChatFeed chatItems={room?.messages ? room.messages : []}
+                                      currentUser={auth.userId}/>
+                        </Box>
+                        <Box
+                            position={"relative"}
+                            width={"100%"}
+                            alignSelf={"center"}
+                            maxW={"80ch"}
+                            p={"2"}
+                        >
+                            <ChatInput submitMessage={submitMessageHandler}/>
+                        </Box>
+                    </Box>
                 </Box>
             </Box>
         </React.Fragment>

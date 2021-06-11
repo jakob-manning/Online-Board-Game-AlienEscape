@@ -1,8 +1,6 @@
 import React from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import "./App.scss"
 import "./custom.scss"
-import backgroundRight from "./Images/gradientRight.svg"
 import backgroundLeft from "./Images/gradientLeft.svg"
 import backgroundLeftLow from "./Images/gradientLeftLow.svg"
 import Footer from "./Components/Footer/Footer";
@@ -16,7 +14,6 @@ import Login from "./Components/User/Login";
 import SignUp from "./Components/User/Signup";
 import Game from "./Components/game/Game";
 import ChatRooms from "./Components/Chat/ChatRooms";
-import ChatRoom from "./Components/Chat/ChatRoom";
 import VerifyEmail from "./Components/User/VerifyEmail";
 
 function App() {
@@ -47,9 +44,6 @@ function App() {
                         </Route>
                         <Route path="/verify">
                             <VerifyEmail />
-                        </Route>
-                        <Route path="/chat/:chatRoomName">
-                            <ChatRoom />
                         </Route>
                         <Route path="/chat">
                             <ChatRooms />

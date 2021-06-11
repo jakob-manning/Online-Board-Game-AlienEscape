@@ -31,20 +31,15 @@ const CreateRoom: React.FC<Props> = (props: Props) => {
         if (!value) {
             error = "Name is Required"
         }
-        if (value.length > 20) {
+        if (value.length > 50) {
             error = "Room name is too long"
-        }
-        const letterNumber = /^[0-9a-zA-Z]+$/;
-        if(!value.match(letterNumber))
-        {
-            error = "Only alphanumeric names please"
         }
         return error
     }
 
     function validateDescription(value: string) {
         let error
-        if (value.length > 20) {
+        if (value.length > 250) {
             error = "Slow down Shakespeare, that's too many characters."
         }
         return error
@@ -89,23 +84,23 @@ const CreateRoom: React.FC<Props> = (props: Props) => {
         >
             {(props: FormikProps<MyFormValues>) => (
                 <Form>
-                    <Field name="name" validate={validateName} mb={"10"}>
+                    <Field name="name" validate={validateName}>
                         {({field, form}: FieldProps) => (
                             <FormControl isInvalid={!!form.errors.name && !!form.touched.name}>
-                                <FormLabel htmlFor="name">Room Name</FormLabel>
+                                <FormLabel htmlFor="name" m={"2"}>Room Name</FormLabel>
                                 <Input {...field}
                                        id="name"
-                                       placeholder=""
+                                       placeholder="Give your room a clever name"
                                        autocomplete={"off"}
                                 />
                                 <FormErrorMessage>{form.errors.name}</FormErrorMessage>
                             </FormControl>
                         )}
                     </Field>
-                    <Field name="description" validate={validateDescription} mb={"10"}>
+                    <Field name="description" validate={validateDescription}>
                         {({field, form}: FieldProps) => (
                             <FormControl isInvalid={!!form.errors.description && !!form.touched.description}>
-                                <FormLabel htmlFor="description">Description</FormLabel>
+                                <FormLabel htmlFor="description" m={"2"} mt={"4"}>Description</FormLabel>
                                 <Input
                                     {...field}
                                     id="description"
@@ -119,7 +114,7 @@ const CreateRoom: React.FC<Props> = (props: Props) => {
                     <Box m={"3"} pb={"6"}>
                         <Button
                             mt={4}
-                            colorScheme="pink"
+                            colorScheme="purple"
                             isLoading={props.isSubmitting}
                             type="submit"
                         >

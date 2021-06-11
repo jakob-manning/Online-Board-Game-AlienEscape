@@ -1,6 +1,5 @@
-import React, {MouseEventHandler, useState} from 'react';
+import React, {useState} from 'react';
 import {cardInterface, itemInterface} from "../../types/types";
-import {Card, CardDeck, Button} from "react-bootstrap";
 import CenteredModal from "../../Modal/CenteredModal";
 import "./UserCurrentItems.css"
 
