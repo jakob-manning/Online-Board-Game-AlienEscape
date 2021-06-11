@@ -48,6 +48,7 @@ const RoomList: React.FC<Props> = (props: Props) => {
     return (
         <Box pr={"4"}
              overflow={"scroll"}
+             flex={"1 1 0"}
              overflowX={"hidden"}
              width={"100%"}
              border={"2px solid yellow"}

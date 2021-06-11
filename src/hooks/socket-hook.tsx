@@ -1,14 +1,14 @@
 import io, {Socket} from 'socket.io-client';
 import {DefaultEventsMap} from 'socket.io-client/build/typed-events';
 
-import {chatPayload, roomID} from "../types/types"
+import {chatPayload, chatRoom, roomID, userID, userInterface} from "../types/types"
 import favicon from "../Images/android-chrome-512x512.png";
 
 const {REACT_APP_BACKEND} = process.env;
 
 let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
 
-export const initiateSocket = (token: string | null, errorCallBack: (error: Error)=> void) => {
+export const initiateSocket = (token: string | null, errorCallBack: (error: Error) => void) => {
 
     socket = io(REACT_APP_BACKEND + '',
         {
@@ -46,12 +46,15 @@ export const disconnectSocket = () => {
 
 export const subscribeToChat = (userID: string | null, cb: (error: Error | null, data: chatPayload | null) => void) => {
     if (!socket) return cb(new Error("Couldn't connect to chat."), null);
+
+    Notification.requestPermission()
+
     socket.on('chat', (payload: chatPayload) => {
         console.log('Websocket event received!');
 
-        const{newMessage, room} = payload
+        const {newMessage, room} = payload
         // Display a notification if the message isn't from you
-        if(newMessage.userID !== userID){
+        if (newMessage.userID !== userID) {
             new Notification(newMessage.userName, {
                 body: newMessage.message,
                 icon: favicon,
@@ -67,4 +70,23 @@ export const sendMessage = (room: roomID, message: string) => {
 
 export const markAsRead = (room: roomID) => {
     if (socket) socket.emit("markAsRead", {room})
+}
+
+export const listenForNewRooms = (newRoomCallback: (room: chatRoom) => void,
+                                  roomDeletedCallback: (roomID: roomID) => void) => {
+    socket.on("newRoom", (payload) => {
+        const {room} = payload
+        console.log('Websocket event received! Added to a new room');
+        return newRoomCallback(room);
+    });
+
+    socket.on("roomDeleted", (payload) => {
+        console.log('Websocket event received! - Room deleted');
+        const {roomID} = payload
+        return roomDeletedCallback(roomID)
+    });
+}
+
+export const addUsersToRoom = (membersToAdd: userID[], roomID: roomID) => {
+    if (socket) socket.emit("addUsersToRoom", {membersToAdd, roomID})
 }

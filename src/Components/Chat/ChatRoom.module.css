@@ -6,12 +6,13 @@
 
 .roomListVisible {
     border: 2px solid red;
-    display: initial;
+    display: flex;
     width: 100%;
 }
 
 .chatParent{
     width: 100%;
+    display: flex;
     border: 2px solid pink;
 }
 
@@ -33,7 +34,7 @@
 @media only screen and (min-width: 510px) {
     .roomList, .roomListVisible {
         border: 2px solid red;
-        display: initial;
+        display: flex;
         width: 40%;
     }
 
@@ -44,7 +45,7 @@
     }
 
     .chatParent, .chatParentHidden{
-        display: initial;
+        display: flex;
         width: 60%;
     }
 

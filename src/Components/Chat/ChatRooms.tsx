@@ -2,18 +2,18 @@ import React, {useContext, useEffect} from 'react';
 import {
     Box, Button,
     useToast, IconButton,
-    Modal, ModalOverlay, ModalContent, ModalCloseButton,ModalBody, ModalFooter, ModalHeader,
+    Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, ModalFooter, ModalHeader,
     useDisclosure,
 } from "@chakra-ui/react";
 import {useHistory} from 'react-router-dom';
-import {chatPayload, chatRoom, roomID, Toast} from "../../types/types";
+import {chatPayload, chatRoom, roomID, Toast, userInterface} from "../../types/types";
 import CreateRoom from "./CreateRoom";
 import {useHttpClient} from "../../hooks/http-hook";
 import {AuthContext} from "../../context/auth-context";
 import {
     disconnectSocket,
     initiateSocket,
-    joinRoom, markAsRead,
+    joinRoom, listenForNewRooms, markAsRead,
     sendMessage,
     subscribeToChat
 } from "../../hooks/socket-hook";
@@ -31,18 +31,23 @@ interface roomDict {
     [index: string]: chatRoom;
 }
 
+interface userDict {
+    [index: string]: userInterface;
+}
+
 const ChatRooms: React.FC = (props) => {
     const auth = useContext(AuthContext);
     const toast = useToast();
     const {sendRequest} = useHttpClient()
+    const [users, setUsers] = React.useState<userDict>({})
     const [rooms, setRooms] = React.useState<roomDict>({})
     const [roomInView, setRoomInView] = React.useState<roomID | null>(null)
-    const { isOpen, onOpen, onClose } = useDisclosure()
+    const {isOpen, onOpen, onClose} = useDisclosure()
     const history = useHistory()
 
     const loadRoomList = async () => {
         try {
-            // Get the user data
+            // Get the users rooms
             let toast: Toast = {
                 successMode: "mute",
                 errorTitle: "Duhn duhn duuuh",
@@ -64,6 +69,31 @@ const ChatRooms: React.FC = (props) => {
         }
     }
 
+    const loadUserList = async () => {
+        try {
+            // Get the user list
+            let toast: Toast = {
+                successMode: "mute",
+                errorTitle: "Duhn duhn duuuh",
+                errorFallBack: "Error connecting to friend server. Try refreshing your page or making new friends?",
+            }
+            let response = await sendRequest("get", "/api/users", toast)
+
+            // load users into state
+            if (response.data.users) {
+                let userDict: userDict = {}
+                for (let user of response.data.users) {
+                    if(auth) if(user.id === auth.userId) continue
+                    userDict[user.id] = user
+                }
+                setUsers(userDict)
+
+            }
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
     const errorHandler = (error: Error) => {
         toast({
             title: "Oppsie-daisy.",
@@ -71,6 +101,28 @@ const ChatRooms: React.FC = (props) => {
             status: "error",
             duration: 3000,
             isClosable: true,
+        })
+        return
+    }
+
+    const newRoomCallback = (room: chatRoom) => {
+        console.log("new room")
+        console.log(room)
+        setRooms( oldRooms =>{
+            let newRooms = {...oldRooms}
+            newRooms[room.id] = room
+            return newRooms
+        })
+        return
+    }
+
+    const roomDeletedCallback = (roomID: roomID) => {
+        console.log("room deleted")
+        console.log(roomID)
+        setRooms( oldRooms =>{
+            let newRooms = {...oldRooms}
+            delete newRooms[roomID]
+            return newRooms
         })
         return
     }
@@ -110,6 +162,8 @@ const ChatRooms: React.FC = (props) => {
             }
         })
 
+        listenForNewRooms(newRoomCallback, roomDeletedCallback)
+
         return () => {
             disconnectSocket();
         }
@@ -119,6 +173,7 @@ const ChatRooms: React.FC = (props) => {
     useEffect(() => {
         if (auth.token) {
             loadRoomList()
+            loadUserList()
         }
     }, [auth])
 
@@ -157,6 +212,9 @@ const ChatRooms: React.FC = (props) => {
                 endPoint,
                 toast
             )
+            // redirect to chat lobby
+            setRoomInView(null)
+
             // Remove room from local list
             setRooms(oldRooms => {
                 let newRooms = {...oldRooms}
@@ -165,9 +223,6 @@ const ChatRooms: React.FC = (props) => {
                 }
                 return {...newRooms}
             })
-
-            // redirect to chat lobby
-            setRoomInView(null)
         } catch (e) {
             setRoomInView(null)
             console.log(e)
@@ -194,34 +249,31 @@ const ChatRooms: React.FC = (props) => {
         closeRoom()
     })
 
-    const newRoomHandler = () =>{
+    const newRoomHandler = () => {
         onClose()
         loadRoomList()
     }
 
-    let header
+    let header = (<SmallHeader title={"Chats"} />)
     if (roomInView) {
         header = (
-            <SmallHeader title={rooms[roomInView].name}
-                         subtitle={rooms[roomInView].description}
+            <SmallHeader title={rooms[roomInView]?.name}
+                         subtitle={rooms[roomInView]?.description}
                          rightButton={<SettingsPopover room={rooms[roomInView]}
                                                        updateLocalRoomDescription={updateRoomDescription}
                                                        deleteRoomHandler={deleteRoomHandler}/>
                          }>
             </SmallHeader>
         )
-    } else {
-        header = (<SmallHeader title={"Chats"}>
-        </SmallHeader>)
     }
 
     const createRoomModel = (<Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
+        <ModalOverlay/>
         <ModalContent>
             <ModalHeader>Create Room</ModalHeader>
-            <ModalCloseButton />
+            <ModalCloseButton/>
             <ModalBody>
-                <CreateRoom closeHandler={newRoomHandler} completeHandler={onClose} />
+                <CreateRoom users={users} closeHandler={newRoomHandler} completeHandler={onClose}/>
             </ModalBody>
 
             <ModalFooter>
@@ -245,15 +297,14 @@ const ChatRooms: React.FC = (props) => {
                 <Box d={"flex"}
                      flexDirection={"row"}
                      flex={"1 1 0"}
-                     alignSelf={"center"}
                      justifyContent={"center"}
 
                      width={"100%"}
                      border={"2px solid green"}
                 >
-                    <Box className={roomInView ? classes.roomList : classes.roomListVisible}
-                         d={"flex"}
+                    <Box
                          flexDirection={"column"}
+                         className={roomInView ? classes.roomList : classes.roomListVisible}
 
                          border={"5px solid black"}
                     >
@@ -266,10 +317,8 @@ const ChatRooms: React.FC = (props) => {
                                   roomDict={rooms}
                                   setRoom={roomEnterHandler}
                         />
-
                     </Box>
-                    <Box d={"flex"}
-                         flexDirection={"column"}
+                    <Box flexDirection={"column"}
                          className={roomInView ? classes.chatParent : classes.chatParentHidden}
                     >
                         <Box width={"100%"}
@@ -297,7 +346,7 @@ const ChatRooms: React.FC = (props) => {
                             {roomInView ? <ChatFeed chatItems={rooms[roomInView].messages
                                 ? rooms[roomInView].messages
                                 : []
-                            }
+                                }
                                                     currentUser={auth.userId}/>
                                 : null
                             }

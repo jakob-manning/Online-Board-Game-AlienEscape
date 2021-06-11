@@ -40,6 +40,9 @@ const SignUp: React.FC = () => {
         if (!value) {
             error = "Required"
         }
+        if (value.length > 20) {
+            error = "Username is too long. Try removing letters from the the middle or either end."
+        }
         return error
     }
 
@@ -201,7 +204,7 @@ const SignUp: React.FC = () => {
                             {({field, form}: FieldProps) => (
                                 <FormControl isInvalid={!!form.errors.email && !!form.touched.email}>
                                     <FormLabel htmlFor="email">Email</FormLabel>
-                                    <Input {...field} id="email" placeholder=""  mb={"5"}/>
+                                    <Input {...field} id="email" placeholder="you'll have to confirm your email"  mb={"5"}/>
                                     <FormErrorMessage>{form.errors.email}</FormErrorMessage>
                                 </FormControl>
                             )}

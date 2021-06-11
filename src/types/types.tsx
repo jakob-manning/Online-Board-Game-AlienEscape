@@ -31,6 +31,8 @@ export interface chatItem {
 
 export type roomID = string
 
+export type userID = string
+
 export interface membersDict {
     [roomID: string]: boolean;
 }
@@ -71,4 +73,14 @@ export interface chatPayload {
 
 export interface roomDict {
     [index: string]: chatRoom;
+}
+
+export interface userInterface {
+    name: string
+    email: string
+    id: string
+}
+
+export interface userDict {
+    [index: string]: userInterface;
 }
