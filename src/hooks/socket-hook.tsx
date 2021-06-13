@@ -92,3 +92,21 @@ export const listenForNewRooms = (newRoomCallback: (room: chatRoom) => void,
 export const addUsersToRoom = (membersToAdd: userID[], roomID: roomID) => {
     if (socket) socket.emit("addUsersToRoom", {membersToAdd, roomID})
 }
+
+export const addUserToRoom = (memberToAdd: userID, roomID: roomID) => {
+    console.log("request to add user to room")
+    if (socket) socket.emit("addUserToRoom", {memberToAdd, roomID})
+}
+
+export const removeUserFromRoom = (memberToRemove: userID, roomID: roomID) => {
+    console.log("request to remove user from room")
+    if (socket) socket.emit("removeUserFromRoom", {memberToRemove, roomID})
+}
+
+export const listenForRoomUpdates = (cb: (room: chatRoom) => void) => {
+    socket.on("newRoomMetaData", (payload) => {
+        console.log('Websocket event received! New Room MetaData');
+        const {room} = payload
+        return cb(room);
+    });
+}

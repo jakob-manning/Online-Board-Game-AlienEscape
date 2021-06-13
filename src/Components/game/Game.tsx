@@ -98,10 +98,6 @@ function Game() {
             {/*/> : null}*/}
             <Container className={"centerFlex"}>
                 <div className="cardBackWrapper">
-                    {/*<Button block as={"h1"} onClick={() => generateCard()} variant={"outline-primary"}>Draw</Button>*/}
-                    {/*<Card border={"dark"} onClick={() => generateCard()}>*/}
-                    {/*    <Card.Img src={cardBackMovement} alt="Card back"/>*/}
-                    {/*</Card>*/}
                 </div>
             </Container>
             <div className={"flexGrow"}>

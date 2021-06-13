@@ -6,14 +6,16 @@ import {
     useDisclosure,
 } from "@chakra-ui/react";
 import {useHistory} from 'react-router-dom';
-import {chatPayload, chatRoom, roomID, Toast, userInterface} from "../../types/types";
+import {chatPayload, chatRoom, roomID, Toast, userID, userInterface} from "../../types/types";
 import CreateRoom from "./CreateAndEditChat/CreateRoom";
 import {useHttpClient} from "../../hooks/http-hook";
 import {AuthContext} from "../../context/auth-context";
 import {
+    addUserToRoom,
     disconnectSocket,
     initiateSocket,
-    joinRoom, listenForNewRooms, markAsRead,
+    joinRoom, listenForNewRooms, listenForRoomUpdates, markAsRead,
+    removeUserFromRoom,
     sendMessage,
     subscribeToChat
 } from "../../hooks/socket-hook";
@@ -23,7 +25,7 @@ import RoomList from "./RoomList";
 import {ArrowLeftIcon} from "@chakra-ui/icons";
 import ChatFeed from "./ChatFeed";
 import ChatInput from "./ChatInput";
-import SettingsPopover from "./CreateAndEditChat/SettingsPopover";
+import SettingsMenu from "./CreateAndEditChat/SettingsMenu";
 import {FormikHelpers} from "formik";
 import {useHotkeys} from "react-hotkeys-hook";
 
@@ -126,6 +128,20 @@ const ChatRooms: React.FC = (props) => {
         return
     }
 
+    const roomUpdateCallBack = (room: chatRoom) => {
+        console.log("updating room metadata")
+        console.log(room)
+        setRooms( oldRooms => {
+            if(room.id) {
+                let newRooms = {...oldRooms}
+                newRooms[room.id] = room
+                return newRooms
+            }
+            return oldRooms
+        })
+        return
+    }
+
     useEffect(() => {
         initiateSocket(auth.token, errorHandler)
 
@@ -162,6 +178,8 @@ const ChatRooms: React.FC = (props) => {
         })
 
         listenForNewRooms(newRoomCallback, roomDeletedCallback)
+
+        listenForRoomUpdates(roomUpdateCallBack)
 
         return () => {
             disconnectSocket();
@@ -237,6 +255,27 @@ const ChatRooms: React.FC = (props) => {
         }
     }
 
+    const addUser = async (userID: userID) => {
+        if(roomInView) {
+            try{
+                addUserToRoom(userID, roomInView)
+            } catch (e) {
+                console.log(e)
+            }
+        }
+    }
+
+    const removeUser = async (userID: userID) => {
+        console.log("request to remove user")
+        if(roomInView) {
+            try{
+                removeUserFromRoom(userID, roomInView)
+            } catch (e) {
+                console.log(e)
+            }
+        }
+    }
+
     const submitMessage = (values: { message: string }, actions: FormikHelpers<{ message: string }>) => {
         if (roomInView) sendMessage(roomInView, values.message)
         actions.resetForm()
@@ -258,10 +297,12 @@ const ChatRooms: React.FC = (props) => {
         header = (
             <SmallHeader title={rooms[roomInView]?.name}
                          subtitle={rooms[roomInView]?.description}
-                         rightButton={<SettingsPopover room={rooms[roomInView]}
-                                                       updateLocalRoomDescription={updateRoomDescription}
-                                                       deleteRoomHandler={deleteRoomHandler}
-                                                       users={users}
+                         rightButton={<SettingsMenu room={rooms[roomInView]}
+                                                    updateLocalRoomDescription={updateRoomDescription}
+                                                    deleteRoomHandler={deleteRoomHandler}
+                                                    users={users}
+                                                    addUser={addUser}
+                                                    removeUser={removeUser}
                          />
                          }>
             </SmallHeader>
@@ -301,13 +342,10 @@ const ChatRooms: React.FC = (props) => {
                      justifyContent={"center"}
 
                      width={"100%"}
-                     border={"2px solid green"}
                 >
                     <Box
                          flexDirection={"column"}
                          className={roomInView ? classes.roomList : classes.roomListVisible}
-
-                         border={"5px solid black"}
                     >
                         <Button onClick={onOpen}
                                 colorScheme={"purple"}
@@ -342,7 +380,7 @@ const ChatRooms: React.FC = (props) => {
                              overflowX={"hidden"}
 
                              width={"100%"}
-                             border={"2px solid red"}
+
                         >
                             {roomInView ? <ChatFeed chatItems={rooms[roomInView].messages
                                 ? rooms[roomInView].messages

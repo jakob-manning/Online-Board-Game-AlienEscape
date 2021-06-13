@@ -16,13 +16,13 @@ interface MyFormValues {
 
 interface Props {
     closeHandler: Function;
-    name: string | undefined;
+    name: string;
     description: string;
-    id: string | undefined;
+    id: string;
     updateRoomDescription: Function
 }
 
-const EditRoom: React.FC<Props> = (props: Props) => {
+const EditRoomDescription: React.FC<Props> = (props: Props) => {
     const {isLoading, error, sendRequest, clearError} = useHttpClient()
 
     function validateDescription(value: string) {
@@ -80,27 +80,17 @@ const EditRoom: React.FC<Props> = (props: Props) => {
                                 <Input
                                     {...field}
                                     id="description"
-                                    placeholder="Enter description"
+                                    placeholder={"Enter description"}
                                     autoComplete={"off"}
                                 />
                                 <FormErrorMessage>{form.errors.description}</FormErrorMessage>
                             </FormControl>
                         )}
                     </Field>
-                    <Box pb={"6"}>
-                        <Button
-                            mt={4}
-                            colorScheme="purple"
-                            isLoading={props.isSubmitting}
-                            type="submit"
-                        >
-                            Update Description
-                        </Button>
-                    </Box>
                 </Form>
             )}
         </Formik>
     );
 };
 
-export default EditRoom;
+export default EditRoomDescription;

@@ -24,8 +24,6 @@ const ChatFeed: React.FC<Props> = (props: Props) => {
             <Box d={"flex"}
                  flexDirection={"column"}
                  justifyContent={"center"}
-
-                 border={"2px solid green"}
             >
             {props.chatItems.map((item, index) => {
                 let currentRef = null
@@ -55,8 +53,6 @@ const ChatFeed: React.FC<Props> = (props: Props) => {
 
                         ml={me ? "10" : "2"}
                         mr={me ? "3" : "10"}
-
-                        border={"2px solid blue"}
                         alignSelf={alignSelf}
                     >
                         <Box d="flex"

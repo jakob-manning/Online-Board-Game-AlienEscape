@@ -13,12 +13,15 @@ import {
     TagLabel,
     CloseButton,
     IconButton,
+    Popover, PopoverTrigger, PopoverContent, PopoverArrow, PopoverCloseButton, PopoverHeader, PopoverBody,PopoverFooter
 } from "@chakra-ui/react";
-import {chatRoom, userDict, userInterface} from "../../../types/types";
+import {chatRoom, Toast, userDict, userInterface} from "../../../types/types";
 
 interface Props {
     users: userDict
     room: chatRoom
+    addUser: Function
+    removeUser: Function
 }
 
 const ReactFunctionalComponent: React.FC<Props> = (props: Props, children) => {
@@ -31,32 +34,11 @@ const ReactFunctionalComponent: React.FC<Props> = (props: Props, children) => {
         // map current users
         let knownMembers = props.room.members.filter( memberID => props.users[memberID])
         setUsersAdded(knownMembers.map(member => props.users[member]))
-    },[])
+    },[props.room, props.users])
 
     const searchHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
         event.preventDefault();
-        console.log(event.target.value)
-        console.log(searchValue)
         setSearchValue(event.target.value);
-    }
-    const addUserHandler = (userID: string) => {
-        setUsersAdded( oldUsers => {
-            let newUsers = [...oldUsers]
-            newUsers.push(props.users[userID])
-            return newUsers
-        })
-        setSearchValue("")
-        if (searchBarRef.current !== null) {
-            searchBarRef.current.scrollIntoView();
-            searchBarRef.current.select();
-        }
-    }
-
-    const removeUserHandler = (userID: string) => {
-        setUsersAdded( oldUsers => {
-            let newUsers = oldUsers.filter(user => user?.id !== userID)
-            return newUsers
-        })
     }
 
     useEffect(() => {
@@ -78,33 +60,55 @@ const ReactFunctionalComponent: React.FC<Props> = (props: Props, children) => {
     }, [searchValue])
 
     return (
-        <><FormLabel htmlFor="userSearch">Current Members</FormLabel>
+        <Box mt={"2"}>
+            <FormLabel htmlFor="userSearch"
+            >Members</FormLabel>
         <Box m={"2"}>
             {usersAdded.map(user => {
                 if(user) return (
-                    <Tag size="lg"
-                         colorScheme="blue"
-                         borderRadius="full"
-                         cursor={"pointer"}
-                         m={"1"}
-                         key={user.id}
-                         onClick={() => removeUserHandler(user.id)}
-                    >
-                        <Avatar
-                            size="xs"
-                            name={user.name}
-                            ml={-1}
-                            mr={2}
-                        />
-                        <TagLabel>{user.name}</TagLabel>
-                    </Tag>
+                    <Popover key={user.id}>
+                        {({ isOpen, onClose} ) => (<>
+                        <PopoverTrigger>
+                            <Tag size="lg"
+                                 colorScheme="blue"
+                                 borderRadius="full"
+                                 cursor={"pointer"}
+                                 m={"1"}
+                            >
+                                <Avatar
+                                    size="xs"
+                                    name={user.name}
+                                    ml={-1}
+                                    mr={2}
+                                />
+                                <TagLabel>{user.name}</TagLabel>
+                            </Tag>
+                        </PopoverTrigger>
+                        <PopoverContent width={"150px"}>
+                            <PopoverArrow />
+                            <PopoverCloseButton />
+                            <PopoverHeader>Remove User?</PopoverHeader>
+                            <PopoverFooter>
+                                <Button colorScheme={"red"}
+                                        onClick={() => {
+                                            props.removeUser(user.id)
+                                            onClose()
+                                        }}
+                                        width={"100%"}
+                                >
+                                    Remove
+                                </Button>
+                            </PopoverFooter>
+                        </PopoverContent>
+                        </>)}
+                    </Popover>
                 )
             })}
         </Box>
         <Box mt={"2"}>
-            <FormLabel htmlFor="userSearch">Add Friends</FormLabel>
+            <FormLabel htmlFor="addFriends"></FormLabel>
             <Input
-                id="userSearch"
+                id="addFriends"
                 name={"userSearch"}
                 value={searchValue}
                 placeholder="Invite Friends"
@@ -115,27 +119,47 @@ const ReactFunctionalComponent: React.FC<Props> = (props: Props, children) => {
             <Box m={"2"}>
                 {searchResults.map(user => {
                     if(user) return (
-                        <Tag size="lg"
-                             colorScheme="red"
-                             borderRadius="full"
-                             cursor={"pointer"}
-                             m={"1"}
-                             key={user.id}
-                             onClick={() => addUserHandler(user.id)}
-                        >
-                            <Avatar
-                                size="xs"
-                                name={user.name}
-                                ml={-1}
-                                mr={2}
-                            />
-                            <TagLabel>{user.name}</TagLabel>
-                        </Tag>
+                        <Popover key={user.id}>
+                            {({ isOpen, onClose} ) => (<>
+                            <PopoverTrigger>
+                                <Tag size="lg"
+                                     colorScheme="red"
+                                     borderRadius="full"
+                                     cursor={"pointer"}
+                                     m={"1"}
+                                >
+                                    <Avatar
+                                        size="xs"
+                                        name={user.name}
+                                        ml={-1}
+                                        mr={2}
+                                    />
+                                    <TagLabel>{user.name}</TagLabel>
+                                </Tag>
+                            </PopoverTrigger>
+                            <PopoverContent width={"150px"}>
+                                <PopoverArrow />
+                                <PopoverCloseButton />
+                                <PopoverHeader>Remove User?</PopoverHeader>
+                                <PopoverFooter>
+                                    <Button colorScheme={"green"}
+                                            onClick={() => {
+                                                props.addUser(user.id)
+                                                onClose()
+                                            }}
+                                            width={"100%"}
+                                    >
+                                        Add
+                                    </Button>
+                                </PopoverFooter>
+                            </PopoverContent>
+                                </>)}
+                        </Popover>
                     )
                 })}
             </Box>
         </Box>
-        </>
+        </Box>
     );
 };
 

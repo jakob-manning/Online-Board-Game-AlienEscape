@@ -51,7 +51,6 @@ const RoomList: React.FC<Props> = (props: Props) => {
              flex={"1 1 0"}
              overflowX={"hidden"}
              width={"100%"}
-             border={"2px solid yellow"}
         >
             {roomArray.map(room => {
                 return (
@@ -71,7 +70,6 @@ const RoomList: React.FC<Props> = (props: Props) => {
                         backgroundColor={props.currentRoom === room.id ? "#f1f7ff" : "none"}
                         width={"100%"}
 
-                        border={"2px solid dodgerblue"}
                     >
                         <Box d={"flex"}
                              flex={"column"}
@@ -89,7 +87,6 @@ const RoomList: React.FC<Props> = (props: Props) => {
                                 overflow={"hidden"}
                                 textOverflow={"ellipsis"}
 
-                                border={"2px solid black"}
                             >
                                 {room.name}
                             </Text>
@@ -104,7 +101,6 @@ const RoomList: React.FC<Props> = (props: Props) => {
                                 overflow={"hidden"}
                                 textOverflow={"ellipsis"}
 
-                                border={"2px solid green"}
                             >
                                 {checkReadStatus(room) ?
                                     calculateTimeSinceMessage(new Date(room.lastUpdated)) :
@@ -133,7 +129,6 @@ const RoomList: React.FC<Props> = (props: Props) => {
                                 overflow={"hidden"}
                                 textOverflow={"ellipsis"}
 
-                                border={"2px solid green"}
                             >
                                 {room.description}
                             </Text>
@@ -148,7 +143,6 @@ const RoomList: React.FC<Props> = (props: Props) => {
                                 overflow={"hidden"}
                                 textOverflow={"ellipsis"}
 
-                                border={"2px solid green"}
                             >
                                 {room.messages[room.messages.length - 1]?.message}
                             </Text>

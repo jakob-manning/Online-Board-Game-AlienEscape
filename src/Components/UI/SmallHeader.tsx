@@ -27,7 +27,7 @@ const Header: React.FC<Props> = (props: Props) => {
                  flexWrap={"wrap"}
             >
                 <Container maxW={"100ch"}>
-                    <Flex width={"100%"} mt={"2"} border={"2px solid red"}>
+                    <Flex width={"100%"} mt={"2"}>
                         <Menu/>
                         <Spacer/>
                         <Text
@@ -36,7 +36,6 @@ const Header: React.FC<Props> = (props: Props) => {
                             fontSize="2xl"
                             fontWeight="extrabold"
                             alignSelf={"center"}
-                            border={"2px solid red"}
                         >
                             {props.title}
                         </Text>

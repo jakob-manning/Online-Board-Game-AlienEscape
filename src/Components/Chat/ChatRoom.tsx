@@ -14,7 +14,7 @@ import {FormikHelpers} from "formik";
 
 import {chatItem, chatPayload, chatRoom, roomDict, Toast} from "../../types/types";
 import {useHttpClient} from "../../hooks/http-hook";
-import EditRoom from "./CreateAndEditChat/EditRoom";
+import EditRoomDescription from "./CreateAndEditChat/EditRoomDescription";
 import ChatFeed from "./ChatFeed";
 import {AuthContext} from "../../context/auth-context";
 import ChatInput from "./ChatInput";
@@ -108,12 +108,12 @@ const ChatRoom: React.FC<Props> = (props: Props) => {
                     <PopoverHeader>Edit Chat Room</PopoverHeader>
                     <PopoverCloseButton/>
                     <PopoverBody>
-                        <EditRoom closeHandler={onClose}
-                                  name={room?.name}
-                                  description={(room?.description || "")}
-                                  id={room?.id}
-                                  updateRoomDescription={updateRoomDescription}
-                        />
+                        {room ? <EditRoomDescription closeHandler={onClose}
+                                                     name={room.name}
+                                                     description={room.description ? room.description : ""}
+                                                     id={room.id}
+                                                     updateRoomDescription={updateRoomDescription}
+                        /> : null}
                         <Button onClick={deleteRoomHandler}>DELETE ROOM</Button>
                     </PopoverBody>
                 </PopoverContent>
@@ -139,7 +139,6 @@ const ChatRoom: React.FC<Props> = (props: Props) => {
 
 
                      width={"100%"}
-                     border={"2px solid green"}
                 >
                     <Box className={classes.roomList}
                          pr={"5"}
@@ -174,7 +173,6 @@ const ChatRoom: React.FC<Props> = (props: Props) => {
                              overflowX={"hidden"}
 
                              width={"100%"}
-                             border={"2px solid red"}
                         >
                             <ChatFeed chatItems={room?.messages ? room.messages : []}
                                       currentUser={auth.userId}/>
