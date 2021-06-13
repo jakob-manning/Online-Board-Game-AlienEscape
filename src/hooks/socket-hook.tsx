@@ -25,8 +25,8 @@ export const initiateSocket = (token: string | null, errorCallBack: (error: Erro
     });
     socket.on("error", (err) => {
         console.log("connection error:");
-        console.log(err.message);
-        errorCallBack(err)
+        console.log(err);
+        errorCallBack(new Error(err))
     });
 }
 
@@ -75,13 +75,15 @@ export const markAsRead = (room: roomID) => {
 export const listenForNewRooms = (newRoomCallback: (room: chatRoom) => void,
                                   roomDeletedCallback: (roomID: roomID) => void) => {
     socket.on("newRoom", (payload) => {
-        const {room} = payload
         console.log('Websocket event received! Added to a new room');
+        const {room} = payload
         return newRoomCallback(room);
     });
 
     socket.on("roomDeleted", (payload) => {
         console.log('Websocket event received! - Room deleted');
+        console.log("room delete sent to us")
+        console.log(payload)
         const {roomID} = payload
         return roomDeletedCallback(roomID)
     });

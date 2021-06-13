@@ -14,7 +14,7 @@ import {FormikHelpers} from "formik";
 
 import {chatItem, chatPayload, chatRoom, roomDict, Toast} from "../../types/types";
 import {useHttpClient} from "../../hooks/http-hook";
-import EditRoom from "./EditRoom";
+import EditRoom from "./CreateAndEditChat/EditRoom";
 import ChatFeed from "./ChatFeed";
 import {AuthContext} from "../../context/auth-context";
 import ChatInput from "./ChatInput";

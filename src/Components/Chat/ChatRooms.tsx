@@ -7,7 +7,7 @@ import {
 } from "@chakra-ui/react";
 import {useHistory} from 'react-router-dom';
 import {chatPayload, chatRoom, roomID, Toast, userInterface} from "../../types/types";
-import CreateRoom from "./CreateRoom";
+import CreateRoom from "./CreateAndEditChat/CreateRoom";
 import {useHttpClient} from "../../hooks/http-hook";
 import {AuthContext} from "../../context/auth-context";
 import {
@@ -23,7 +23,7 @@ import RoomList from "./RoomList";
 import {ArrowLeftIcon} from "@chakra-ui/icons";
 import ChatFeed from "./ChatFeed";
 import ChatInput from "./ChatInput";
-import SettingsPopover from "./SettingsPopover";
+import SettingsPopover from "./CreateAndEditChat/SettingsPopover";
 import {FormikHelpers} from "formik";
 import {useHotkeys} from "react-hotkeys-hook";
 
@@ -83,7 +83,6 @@ const ChatRooms: React.FC = (props) => {
             if (response.data.users) {
                 let userDict: userDict = {}
                 for (let user of response.data.users) {
-                    if(auth) if(user.id === auth.userId) continue
                     userDict[user.id] = user
                 }
                 setUsers(userDict)
@@ -261,7 +260,9 @@ const ChatRooms: React.FC = (props) => {
                          subtitle={rooms[roomInView]?.description}
                          rightButton={<SettingsPopover room={rooms[roomInView]}
                                                        updateLocalRoomDescription={updateRoomDescription}
-                                                       deleteRoomHandler={deleteRoomHandler}/>
+                                                       deleteRoomHandler={deleteRoomHandler}
+                                                       users={users}
+                         />
                          }>
             </SmallHeader>
         )

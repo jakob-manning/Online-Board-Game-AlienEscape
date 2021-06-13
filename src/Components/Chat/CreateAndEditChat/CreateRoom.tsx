@@ -12,13 +12,12 @@ import {
     CloseButton,
     IconButton,
 } from "@chakra-ui/react";
-import {AddIcon} from "@chakra-ui/icons"
 import {Formik, Form, Field, FormikProps, FieldProps, FormikHelpers} from "formik";
 import React, {useEffect, useState} from "react";
-import {useHttpClient} from "../../hooks/http-hook";
-import {Toast, userDict, userInterface} from "../../types/types";
+import {useHttpClient} from "../../../hooks/http-hook";
+import {Toast, userDict, userInterface} from "../../../types/types";
 import { useHotkeys } from 'react-hotkeys-hook';
-import { addUsersToRoom } from "../../hooks/socket-hook";
+import { addUsersToRoom } from "../../../hooks/socket-hook";
 
 const {REACT_APP_BACKEND} = process.env;
 
@@ -94,7 +93,6 @@ const CreateRoom: React.FC<Props> = (props: Props) => {
 
     const searchHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
         event.preventDefault();
-        console.log(event.target.value === "Enter")
 
         setSearchValue(event.target.value);
     }
@@ -154,7 +152,7 @@ const CreateRoom: React.FC<Props> = (props: Props) => {
                                 <Input {...field}
                                        id="name"
                                        placeholder="Give your room a clever name"
-                                       autocomplete={"off"}
+                                       autoComplete={"off"}
                                 />
                                 <FormErrorMessage>{form.errors.name}</FormErrorMessage>
                             </FormControl>
@@ -168,7 +166,7 @@ const CreateRoom: React.FC<Props> = (props: Props) => {
                                     {...field}
                                     id="description"
                                     placeholder="Enter description"
-                                    autocomplete={"off"}
+                                    autoComplete={"off"}
                                 />
                                 <FormErrorMessage>{form.errors.description}</FormErrorMessage>
                             </FormControl>
@@ -203,7 +201,7 @@ const CreateRoom: React.FC<Props> = (props: Props) => {
                             name={"userSearch"}
                             value={searchValue}
                             placeholder="Invite Friends"
-                            autocomplete={"off"}
+                            autoComplete={"off"}
                             ref={searchBarRef}
                             onChange={(event) => searchHandler(event)}
                         />

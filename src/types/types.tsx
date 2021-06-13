@@ -47,7 +47,7 @@ export interface chatRoom {
     lastSeen: Date,
     creator: string,
     owners?: string[],
-    members?: string[],
+    members: string[],
     password?: string,
     admin?:string[],
     messages: chatItem[],

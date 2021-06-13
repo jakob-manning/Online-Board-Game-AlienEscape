@@ -45,7 +45,7 @@ export const useHttpClient = () => {
                             title: toastContent.successTitle || "Success!",
                             description:  toastContent.successBody || "yippee ki yay!",
                             status: toastContent.successStatus || "success",
-                            duration: 2000,
+                            duration: 4000,
                             isClosable: true,
                         })
                     }
@@ -56,7 +56,7 @@ export const useHttpClient = () => {
                             title: (toastContent.errorTitle || "Uh Oh!"),
                             description: (toastContent.errorFallBack || "Something went wrong behind the scenes. Please try again."),
                             status: (toastContent.errorStatus || "error"),
-                            duration: 2000,
+                            duration: 6000,
                             isClosable: true,
                         })
                     }
@@ -74,7 +74,7 @@ export const useHttpClient = () => {
                         title: (toastContent.errorTitle || "Uh Oh!"),
                         description: (e.response?.data?.message ||  toastContent.errorFallBack || "Something went wrong behind the scenes. Please try again."),
                         status: (toastContent.errorStatus || "error"),
-                        duration: 4000,
+                        duration: 6000,
                         isClosable: true,
                     })
                 }

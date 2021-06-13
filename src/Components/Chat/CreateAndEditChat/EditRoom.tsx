@@ -7,8 +7,8 @@ import {
     FormErrorMessage,
 } from "@chakra-ui/react";
 import {Formik, Form, Field, FormikProps, FieldProps, FormikHelpers} from "formik";
-import {useHttpClient} from "../../hooks/http-hook";
-import {Toast} from "../../types/types";
+import {useHttpClient} from "../../../hooks/http-hook";
+import {Toast} from "../../../types/types";
 
 interface MyFormValues {
     description: string;
@@ -81,20 +81,20 @@ const EditRoom: React.FC<Props> = (props: Props) => {
                                     {...field}
                                     id="description"
                                     placeholder="Enter description"
-                                    autocomplete={"off"}
+                                    autoComplete={"off"}
                                 />
                                 <FormErrorMessage>{form.errors.description}</FormErrorMessage>
                             </FormControl>
                         )}
                     </Field>
-                    <Box m={"3"} pb={"6"}>
+                    <Box pb={"6"}>
                         <Button
                             mt={4}
-                            colorScheme="pink"
+                            colorScheme="purple"
                             isLoading={props.isSubmitting}
                             type="submit"
                         >
-                            Save
+                            Update Description
                         </Button>
                     </Box>
                 </Form>

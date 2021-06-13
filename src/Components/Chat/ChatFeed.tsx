@@ -45,8 +45,7 @@ const ChatFeed: React.FC<Props> = (props: Props) => {
                 return (
                     <Box
                         maxW="sm"
-                        // maxW={"fit-content"}
-                        // borderWidth="1px"
+                        key={item.id}
                         borderRadius="lg"
                         overflow="hidden"
                         backgroundColor={backgroundColor}

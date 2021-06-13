@@ -42,7 +42,7 @@ const ReactFunctionalComponent: React.FC<Props> = (props: Props) => {
                                         colorScheme="purple"
                                         id="message"
                                         placeholder=""
-                                        autocomplete="off"
+                                        autoComplete={"off"}
                                         focusBorderColor={"none"}
                                         m={"0"}
                                         pr="4.5rem"

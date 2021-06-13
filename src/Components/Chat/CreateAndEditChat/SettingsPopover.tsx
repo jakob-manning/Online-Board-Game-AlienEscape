@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {
     IconButton,
@@ -7,16 +7,19 @@ import {
     Popover, PopoverTrigger, PopoverBody,
     PopoverCloseButton, PopoverHeader, PopoverArrow,
     PopoverContent,
-    useDisclosure
+    useDisclosure,
+    Box
 } from "@chakra-ui/react";
 import {SettingsIcon} from '@chakra-ui/icons'
 import EditRoom from "./EditRoom";
-import {chatRoom} from "../../types/types";
+import {chatRoom, userDict, userInterface} from "../../../types/types";
+import AddMembers from "./AddMembers";
 
 interface Props {
     room: chatRoom
     updateLocalRoomDescription: Function
     deleteRoomHandler: Function
+    users: userDict
 }
 
 const SettingsPopover: React.FC<Props> = (props: Props, children) => {
@@ -50,7 +53,20 @@ const SettingsPopover: React.FC<Props> = (props: Props, children) => {
                                   id={props.room?.id}
                                   updateRoomDescription={props.updateLocalRoomDescription}
                         />
-                        <Button onClick={() => props.deleteRoomHandler(props.room.id)}>DELETE ROOM</Button>
+                        <Box>
+                            <AddMembers users={props.users} room={props.room} />
+                        </Box>
+                        <Box mb={"5"}>
+                            <Button colorScheme={"purple"}>
+                                Update Users
+                            </Button>
+                        </Box>
+
+                        <Button
+                            mt={"4"}
+                            onClick={() => props.deleteRoomHandler(props.room.id)}
+                            colorScheme={"red"}
+                        >DELETE ROOM</Button>
                     </PopoverBody>
                 </PopoverContent>
             </Portal>
