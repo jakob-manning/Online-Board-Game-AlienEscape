@@ -15,8 +15,10 @@ export const initiateSocket = (token: string | null, errorCallBack: (error: Erro
             auth: {token}
         }
     );
+
+    Notification.requestPermission()
+
     console.log(`Connecting socket...`);
-    // if (socket && room) socket.emit('join', room);
 
     socket.on("connect_error", (err) => {
         console.log("connection error:");
@@ -47,10 +49,9 @@ export const disconnectSocket = () => {
 export const subscribeToChat = (userID: string | null, cb: (error: Error | null, data: chatPayload | null) => void) => {
     if (!socket) return cb(new Error("Couldn't connect to chat."), null);
 
-    Notification.requestPermission()
-
     socket.on('chat', (payload: chatPayload) => {
-        console.log('Websocket event received!');
+        console.log('Websocket chat event received!');
+        console.log(payload.newMessage)
 
         const {newMessage, room} = payload
         // Display a notification if the message isn't from you

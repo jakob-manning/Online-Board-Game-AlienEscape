@@ -118,7 +118,7 @@ const CreateRoom: React.FC<Props> = (props: Props) => {
     }
 
     useEffect(() => {
-        if (searchValue.length > 2) {
+        if (searchValue.length > 0) {
             //search users for this name
             let userList = Object.values(props.users)
             let results = userList.filter(user => {
@@ -130,8 +130,8 @@ const CreateRoom: React.FC<Props> = (props: Props) => {
             })
             setSearchResults(results)
         } else {
-            // clear search results
-            setSearchResults([])
+            // show a few people
+            setSearchResults(Object.values(props.users).slice(0,6))
         }
     }, [searchValue])
 

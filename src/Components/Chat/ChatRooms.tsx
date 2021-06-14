@@ -5,7 +5,7 @@ import {
     Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, ModalFooter, ModalHeader,
     useDisclosure,
 } from "@chakra-ui/react";
-import {useHistory} from 'react-router-dom';
+
 import {chatPayload, chatRoom, roomID, Toast, userID, userInterface} from "../../types/types";
 import CreateRoom from "./CreateAndEditChat/CreateRoom";
 import {useHttpClient} from "../../hooks/http-hook";
@@ -28,6 +28,7 @@ import ChatInput from "./ChatInput";
 import SettingsMenu from "./CreateAndEditChat/SettingsMenu";
 import {FormikHelpers} from "formik";
 import {useHotkeys} from "react-hotkeys-hook";
+import {useHistory} from 'react-router-dom';
 
 interface roomDict {
     [index: string]: chatRoom;
@@ -45,7 +46,7 @@ const ChatRooms: React.FC = (props) => {
     const [rooms, setRooms] = React.useState<roomDict>({})
     const [roomInView, setRoomInView] = React.useState<roomID | null>(null)
     const {isOpen, onOpen, onClose} = useDisclosure()
-    const history = useHistory()
+    const history = useHistory();
 
     const loadRoomList = async () => {
         try {
@@ -109,7 +110,7 @@ const ChatRooms: React.FC = (props) => {
     const newRoomCallback = (room: chatRoom) => {
         console.log("new room")
         console.log(room)
-        setRooms( oldRooms =>{
+        setRooms(oldRooms => {
             let newRooms = {...oldRooms}
             newRooms[room.id] = room
             return newRooms
@@ -125,7 +126,7 @@ const ChatRooms: React.FC = (props) => {
         console.log(typeof roomInView)
         console.log(roomID)
         console.log(typeof roomID)
-        if(roomInView === roomID){
+        if (roomInView === roomID) {
             setRoomInView(null)
             console.log("the room you were viewing is no longer available")
             toast({
@@ -137,7 +138,7 @@ const ChatRooms: React.FC = (props) => {
             })
         }
 
-        setRooms( oldRooms =>{
+        setRooms(oldRooms => {
             let newRooms = {...oldRooms}
             delete newRooms[roomID]
             return newRooms
@@ -148,8 +149,8 @@ const ChatRooms: React.FC = (props) => {
     const roomUpdateCallBack = (room: chatRoom) => {
         console.log("updating room metadata")
         console.log(room)
-        setRooms( oldRooms => {
-            if(room.id) {
+        setRooms(oldRooms => {
+            if (room.id) {
                 let newRooms = {...oldRooms}
                 newRooms[room.id] = room
                 return newRooms
@@ -176,20 +177,30 @@ const ChatRooms: React.FC = (props) => {
             }
             if (data !== null) {
                 const {newMessage, room} = data
+                console.log("new Message")
+                console.log(newMessage)
                 setRooms(oldRooms => {
-                    oldRooms[room].messages.push(newMessage)
-                    oldRooms[room].lastUpdated = new Date()
-                    oldRooms[room].updatedBy = newMessage.userID
-                    if (!oldRooms[room].membersRead) {
-                        oldRooms[room].membersRead = {}
+                    console.log("old rooms")
+                    console.log(oldRooms)
+                    let newRoom = {...oldRooms[room]}
+                    let newRoomMessages = [...oldRooms[room].messages]
+                    newRoomMessages.push(newMessage)
+                    newRoom.messages = newRoomMessages
+                    newRoom.lastUpdated = new Date()
+                    newRoom.updatedBy = newMessage.userID
+                    if (!newRoom.membersRead) {
+                        newRoom.membersRead = {}
                     }
                     if (roomInView === room || newMessage.userID === auth.userId) {
-                        oldRooms[room].membersRead[auth.userId as string] = true
-                        roomInView && markAsRead(roomInView)
+                        console.log("marking as read because room in view")
+                        newRoom.membersRead[auth.userId as string] = true
+                        if (roomInView) markAsRead(roomInView)
                     } else {
-                        oldRooms[room].membersRead[auth.userId as string] = false
+                        newRoom.membersRead[auth.userId as string] = false
                     }
-                    return {...oldRooms}
+                    console.log("new room")
+                    console.log(newRoom)
+                    return {...oldRooms, [room]: newRoom}
                 })
             }
         })
@@ -210,6 +221,55 @@ const ChatRooms: React.FC = (props) => {
             loadUserList()
         }
     }, [auth])
+
+    useEffect(() => {
+        const unlisten = history.listen((newLocation, action) => {
+            console.log(action)
+            console.log(newLocation)
+            setRoomInView(null)
+            history.go(1);
+        });
+        //
+        // Use push, replace, and go to navigate around.
+        history.push('/');
+
+        return unlisten
+    }, [history])
+
+
+    // const unblock = history.block('Are you sure you want to leave this page?');
+    //
+    // // Or use a function that returns the message when it's needed.
+    // history.block((location, action) => {
+    //     // The location and action arguments indicate the location
+    //     // we're transitioning to and how we're getting there.
+    //
+    //     // A common use case is to prevent the user from leaving the
+    //     // page if there's a form they haven't submitted yet.
+    //     return 'Are you sure you want to leave this page?';
+    // });
+    //
+    // // To stop blocking transitions, call the function returned from block().
+    // unblock();
+
+    // useEffect(() => {
+    //     // Register a simple prompt message that will be shown the
+    //     // user before they navigate away from the current page.
+    //     const unblock = history.block('Are you sure you want to leave this page?');
+    //
+    //     // Or use a function that returns the message when it's needed.
+    //     history.block((location, action) => {
+    //         // The location and action arguments indicate the location
+    //         // we're transitioning to and how we're getting there.
+    //
+    //         // A common use case is to prevent the user from leaving the
+    //         // page if there's a form they haven't submitted yet.
+    //         return 'Are you sure you want to leave this page?';
+    //     });
+    //
+    //     // To stop blocking transitions, call the function returned from block().
+    //     return unblock();
+    // }, [history])
 
     const roomEnterHandler = (newRoom: roomID) => {
         setRoomInView(newRoom)
@@ -273,8 +333,8 @@ const ChatRooms: React.FC = (props) => {
     }
 
     const addUser = async (userID: userID) => {
-        if(roomInView) {
-            try{
+        if (roomInView) {
+            try {
                 addUserToRoom(userID, roomInView)
             } catch (e) {
                 console.log(e)
@@ -284,8 +344,8 @@ const ChatRooms: React.FC = (props) => {
 
     const removeUser = async (userID: userID) => {
         console.log("request to remove user")
-        if(roomInView) {
-            try{
+        if (roomInView) {
+            try {
                 removeUserFromRoom(userID, roomInView)
             } catch (e) {
                 console.log(e)
@@ -309,7 +369,7 @@ const ChatRooms: React.FC = (props) => {
         loadRoomList()
     }
 
-    let header = (<SmallHeader title={"Chats"} />)
+    let header = (<SmallHeader title={"Chats"}/>)
     if (roomInView) {
         header = (
             <SmallHeader title={rooms[roomInView]?.name}
@@ -361,8 +421,8 @@ const ChatRooms: React.FC = (props) => {
                      width={"100%"}
                 >
                     <Box
-                         flexDirection={"column"}
-                         className={roomInView ? classes.roomList : classes.roomListVisible}
+                        flexDirection={"column"}
+                        className={roomInView ? classes.roomList : classes.roomListVisible}
                     >
                         <Button onClick={onOpen}
                                 colorScheme={"purple"}

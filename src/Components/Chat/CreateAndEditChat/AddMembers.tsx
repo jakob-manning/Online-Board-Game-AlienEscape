@@ -42,7 +42,7 @@ const ReactFunctionalComponent: React.FC<Props> = (props: Props, children) => {
     }
 
     useEffect(() => {
-        if (searchValue.length > 2) {
+        if (searchValue.length > 0) {
             //search users for this name
             let userList = Object.values(props.users)
             let results = userList.filter(user => {
@@ -140,7 +140,7 @@ const ReactFunctionalComponent: React.FC<Props> = (props: Props, children) => {
                             <PopoverContent width={"150px"}>
                                 <PopoverArrow />
                                 <PopoverCloseButton />
-                                <PopoverHeader>Remove User?</PopoverHeader>
+                                <PopoverHeader>Add User?</PopoverHeader>
                                 <PopoverFooter>
                                     <Button colorScheme={"green"}
                                             onClick={() => {

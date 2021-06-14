@@ -79,6 +79,7 @@ export interface userInterface {
     name: string
     email: string
     id: string
+    active: boolean
 }
 
 export interface userDict {

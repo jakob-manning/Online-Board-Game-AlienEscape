@@ -3,16 +3,12 @@ import "./App.scss"
 import "./custom.scss"
 import backgroundLeft from "./Images/gradientLeft.svg"
 import backgroundLeftLow from "./Images/gradientLeftLow.svg"
-import Footer from "./Components/Footer/Footer";
-import {BrowserRouter, Switch, Route} from "react-router-dom";
+import {BrowserRouter, Switch, Route, Redirect} from "react-router-dom";
 import {useAuth} from "./hooks/auth-hook";
 import {AuthContext} from './context/auth-context';
 
-import JoinGame from "./Components/JoinGame/JoinGame";
-import NewGame from "./Components/NewGame/NewGame";
 import Login from "./Components/User/Login";
 import SignUp from "./Components/User/Signup";
-import Game from "./Components/game/Game";
 import ChatRooms from "./Components/Chat/ChatRooms";
 import VerifyEmail from "./Components/User/VerifyEmail";
 
@@ -31,46 +27,27 @@ function App() {
         >
             <BrowserRouter>
                 <div className={"gameWrapper"}>
-                    {/*<img src={backgroundRight} alt={"background gradient"} className={"bgImgRight"}/>*/}
                     <img src={backgroundLeft} alt={"background gradient"} className={"bgImgLeft"}/>
                     <img src={backgroundLeftLow} alt={"background gradient"} className={"bgImgLeftLow"}/>
                     <p/>
                     <Switch>
                         <Route path="/login">
-                            <Login/>
+                            {token? <Redirect to="/" /> : <Login/>}
                         </Route>
                         <Route path="/signup">
-                            <SignUp/>
+                            {token? <Redirect to="/" /> : <SignUp/>}
                         </Route>
                         <Route path="/verify">
                             <VerifyEmail />
                         </Route>
                         <Route path="/chat">
-                            <ChatRooms />
-                        </Route>
-                        <Route path="/game/:tableName">
-                            <Game/>
-                            <Footer/>
-                        </Route>
-                        <Route path="/game">
-                            <Game/>
-                            <Footer/>
-                        </Route>
-                        <Route path="/new_game">
-                            <NewGame/>
-                        </Route>
-                        <Route path="/join_game/:tableName">
-                            <JoinGame/>
-                        </Route>
-                        <Route path="/join_game">
-                            <JoinGame/>
+                            <Redirect to="/" />
                         </Route>
                         <Route exact path="/">
-                            <Login/>
-                            {/*<HomePage/>*/}
+                            {token ? <ChatRooms /> : <Redirect to="/login" /> }
                         </Route>
                         <Route path="/">
-                            <p>Error 404 - Page not found</p>
+                            {token ? <Redirect to="/" /> : <Redirect to="/login" /> }
                         </Route>
                     </Switch>
                 </div>
