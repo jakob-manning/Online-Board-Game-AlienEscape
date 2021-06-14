@@ -46,17 +46,18 @@ const RoomList: React.FC<Props> = (props: Props) => {
     )
 
     return (
-        <Box pr={"4"}
-             overflow={"scroll"}
+        <Box overflow={"scroll"}
              flex={"1 1 0"}
              overflowX={"hidden"}
              width={"100%"}
+             pl={"1"}
+             pr={"5"}
         >
             {roomArray.map(room => {
                 return (
                     <Box
                         m={"2"}
-                        p={"1"}
+                        p={"2"}
                         key={room.id}
                         as={"button"}
                         borderRadius="xl"

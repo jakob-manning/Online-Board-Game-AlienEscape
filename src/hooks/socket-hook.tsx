@@ -55,6 +55,7 @@ export const subscribeToChat = (userID: string | null, cb: (error: Error | null,
         const {newMessage, room} = payload
         // Display a notification if the message isn't from you
         if (newMessage.userID !== userID) {
+            console.log(room)
             new Notification(newMessage.userName, {
                 body: newMessage.message,
                 icon: favicon,

@@ -24,6 +24,7 @@ const ChatFeed: React.FC<Props> = (props: Props) => {
             <Box d={"flex"}
                  flexDirection={"column"}
                  justifyContent={"center"}
+                 p={"3"}
             >
             {props.chatItems.map((item, index) => {
                 let currentRef = null
@@ -33,12 +34,14 @@ const ChatFeed: React.FC<Props> = (props: Props) => {
                 let alignSelf = "flex-start"
                 let textAlign: ResponsiveValue<CanvasTextAlign> = "left"
                 let me = false
-                let backgroundColor = "#ffabd5"
+                // let backgroundColor = "#ffabd5"
+                let backgroundColor = "#FEB2B2"
                 if (item.userID === props.currentUser) {
                     alignSelf = "flex-end"
                     textAlign = "right"
                     me = true
-                    backgroundColor = "#cccfff"
+                    // backgroundColor = "#cccfff"
+                    backgroundColor = "#D6BCFA"
                 }
                 return (
                     <Box
@@ -48,7 +51,9 @@ const ChatFeed: React.FC<Props> = (props: Props) => {
                         overflow="hidden"
                         backgroundColor={backgroundColor}
                         p={"2"}
-                        m={"3"}
+                        pl={"3"}
+                        pr={"3"}
+                        m={"2"}
                         boxShadow="base"
 
                         ml={me ? "10" : "2"}
@@ -61,7 +66,7 @@ const ChatFeed: React.FC<Props> = (props: Props) => {
                         >
                             <Box
                                 textAlign={textAlign}
-                                color="white"
+                                color="gray.100"
                                 fontWeight="semibold"
                                 letterSpacing="wide"
                                 fontSize="xs"
@@ -75,7 +80,7 @@ const ChatFeed: React.FC<Props> = (props: Props) => {
                                 textAlign={textAlign}
                                 mt="1"
                                 // fontWeight="semibold"
-                                color="gray.900"
+                                color="gray.700"
                             >
                                 {item.message}
                             </Box>

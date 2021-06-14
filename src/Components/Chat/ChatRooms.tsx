@@ -120,6 +120,23 @@ const ChatRooms: React.FC = (props) => {
     const roomDeletedCallback = (roomID: roomID) => {
         console.log("room deleted")
         console.log(roomID)
+        console.log("room in view and deleted room ID:")
+        console.log(roomInView)
+        console.log(typeof roomInView)
+        console.log(roomID)
+        console.log(typeof roomID)
+        if(roomInView === roomID){
+            setRoomInView(null)
+            console.log("the room you were viewing is no longer available")
+            toast({
+                title: "It's over.",
+                description: ("The room you were viewing is no longer available."),
+                status: "info",
+                duration: 9000,
+                isClosable: true,
+            })
+        }
+
         setRooms( oldRooms =>{
             let newRooms = {...oldRooms}
             delete newRooms[roomID]
@@ -143,6 +160,10 @@ const ChatRooms: React.FC = (props) => {
     }
 
     useEffect(() => {
+        if(!auth.isLoggedIn){
+            history.push("/login")
+        }
+
         initiateSocket(auth.token, errorHandler)
 
         if (rooms) {
@@ -352,7 +373,7 @@ const ChatRooms: React.FC = (props) => {
                                 m={"2"}
                         >Create Room</Button>
                         <RoomList currentUser={auth.userId as string}
-                                  currentRoom={roomInView ? rooms[roomInView].id : undefined}
+                                  currentRoom={roomInView ? rooms[roomInView]?.id : undefined}
                                   roomDict={rooms}
                                   setRoom={roomEnterHandler}
                         />
