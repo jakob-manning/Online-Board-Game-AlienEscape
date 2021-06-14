@@ -160,10 +160,6 @@ const ChatRooms: React.FC = (props) => {
     }
 
     useEffect(() => {
-        if(!auth.isLoggedIn){
-            history.push("/login")
-        }
-
         initiateSocket(auth.token, errorHandler)
 
         if (rooms) {

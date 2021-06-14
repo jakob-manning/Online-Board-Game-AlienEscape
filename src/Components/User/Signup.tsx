@@ -195,7 +195,11 @@ const SignUp: React.FC = () => {
                             {({field, form}: FieldProps) => (
                                 <FormControl isInvalid={!!form.errors.name && !!form.touched.name}>
                                     <FormLabel htmlFor="name">User Name</FormLabel>
-                                    <Input {...field} id="name" placeholder=""  mb={"5"}/>
+                                    <Input {...field}
+                                           id="name"
+                                           placeholder=""
+                                           mb={"5"}
+                                           autoComplete={"false"}/>
                                     <FormErrorMessage>{form.errors.name}</FormErrorMessage>
                                 </FormControl>
                             )}
@@ -204,7 +208,10 @@ const SignUp: React.FC = () => {
                             {({field, form}: FieldProps) => (
                                 <FormControl isInvalid={!!form.errors.email && !!form.touched.email}>
                                     <FormLabel htmlFor="email">Email</FormLabel>
-                                    <Input {...field} id="email" placeholder="you'll have to confirm your email"  mb={"5"}/>
+                                    <Input {...field} id="email"
+                                           placeholder="you'll have to confirm your email"
+                                           mb={"5"}
+                                    />
                                     <FormErrorMessage>{form.errors.email}</FormErrorMessage>
                                 </FormControl>
                             )}
@@ -219,6 +226,7 @@ const SignUp: React.FC = () => {
                                             type={showPassword ? "text" : "password"}
                                             id="password"
                                             placeholder="Enter password"
+                                            autoComplete={"false"}
                                         />
                                         <InputRightElement width="4.5rem">
                                             <Button h="1.75rem" size="sm" onClick={togglePasswordShow}>
