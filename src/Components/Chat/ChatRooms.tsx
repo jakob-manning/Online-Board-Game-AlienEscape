@@ -4,6 +4,12 @@ import {
     useToast, IconButton,
     Modal, ModalOverlay, ModalContent, ModalCloseButton, ModalBody, ModalFooter, ModalHeader,
     useDisclosure,
+    Tabs,
+    TabList,
+    TabPanels,
+    TabPanel,
+    Tab,
+    Spacer,
 } from "@chakra-ui/react";
 
 import {chatPayload, chatRoom, roomID, Toast, userID, userInterface} from "../../types/types";
@@ -29,6 +35,7 @@ import SettingsMenu from "./CreateAndEditChat/SettingsMenu";
 import {FormikHelpers} from "formik";
 import {useHotkeys} from "react-hotkeys-hook";
 import {useHistory} from 'react-router-dom';
+import PublicRooms from "./PublicRooms";
 
 interface roomDict {
     [index: string]: chatRoom;
@@ -45,6 +52,7 @@ const ChatRooms: React.FC = (props) => {
     const [users, setUsers] = React.useState<userDict>({})
     const [rooms, setRooms] = React.useState<roomDict>({})
     const [roomInView, setRoomInView] = React.useState<roomID | null>(null)
+    const [tabIndex, setTabIndex] = React.useState(0)
     const {isOpen, onOpen, onClose} = useDisclosure()
     const history = useHistory();
 
@@ -287,6 +295,28 @@ const ChatRooms: React.FC = (props) => {
         })
     }
 
+    const publicRoomEnterHandler = (publicRoom: roomID) => {
+        // sent a get request to find this room
+
+        // if the request is successful, display a room. Otherwise send an error message
+
+        //
+
+        setRoomInView(publicRoom)
+
+        // Ask the server to mark it as read
+        markAsRead(publicRoom)
+
+        // Mark it as read locally
+        setRooms(oldRooms => {
+            if (!oldRooms[publicRoom].membersRead) {
+                oldRooms[publicRoom].membersRead = {}
+            }
+            oldRooms[publicRoom].membersRead[auth.userId as string] = true
+            return {...oldRooms}
+        })
+    }
+
     const closeRoom = () => {
         setRoomInView(null)
     }
@@ -423,16 +453,29 @@ const ChatRooms: React.FC = (props) => {
                     <Box
                         flexDirection={"column"}
                         className={roomInView ? classes.roomList : classes.roomListVisible}
+
+                        border={"5px solid green"}
                     >
                         <Button onClick={onOpen}
                                 colorScheme={"purple"}
                                 m={"2"}
                         >Create Room</Button>
-                        <RoomList currentUser={auth.userId as string}
-                                  currentRoom={roomInView ? rooms[roomInView]?.id : undefined}
-                                  roomDict={rooms}
-                                  setRoom={roomEnterHandler}
-                        />
+                        <Tabs variant="soft-rounded"
+                              colorScheme="purple"
+                              onChange={(index) => setTabIndex(index)}
+                        >
+                            <TabList m={"3"}>
+                                <Spacer />
+                                <Tab>My Chat Rooms</Tab>
+                                <Tab>Public Rooms</Tab>
+                                <Spacer />
+                            </TabList>
+                        </Tabs>
+                        {tabIndex===0 ? <RoomList currentUser={auth.userId as string}
+                                                  currentRoom={roomInView ? rooms[roomInView]?.id : undefined}
+                                                  roomDict={rooms}
+                                                  setRoom={roomEnterHandler}
+                        /> : <PublicRooms setRoom={publicRoomEnterHandler} currentUser={auth.userId as string} currentRoom={roomInView ? rooms[roomInView]?.id : undefined} />}
                     </Box>
                     <Box flexDirection={"column"}
                          className={roomInView ? classes.chatParent : classes.chatParentHidden}
@@ -460,11 +503,10 @@ const ChatRooms: React.FC = (props) => {
 
                         >
                             {roomInView ? <ChatFeed chatItems={rooms[roomInView].messages
-                                ? rooms[roomInView].messages
-                                : []
-                                }
+                                                    ? rooms[roomInView].messages
+                                                    : []}
                                                     currentUser={auth.userId}/>
-                                : null
+                                        : null
                             }
                         </Box>
                         <Box

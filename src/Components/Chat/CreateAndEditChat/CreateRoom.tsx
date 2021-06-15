@@ -131,7 +131,7 @@ const CreateRoom: React.FC<Props> = (props: Props) => {
             setSearchResults(results)
         } else {
             // show a few people
-            setSearchResults(Object.values(props.users).slice(0,6))
+            setSearchResults(Object.values(props.users).slice(0,9))
         }
     }, [searchValue])
 

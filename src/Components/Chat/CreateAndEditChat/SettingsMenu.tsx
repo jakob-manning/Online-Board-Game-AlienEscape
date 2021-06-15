@@ -3,12 +3,8 @@ import React, {useEffect, useState} from 'react';
 import {
     IconButton,
     Button,
-    Portal,
-    Popover, PopoverTrigger, PopoverBody,
-    PopoverCloseButton, PopoverHeader, PopoverArrow,
-    PopoverContent,
     useDisclosure,
-    Box, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Modal
+    ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Modal
 } from "@chakra-ui/react";
 import {SettingsIcon} from '@chakra-ui/icons'
 import EditRoomDescription from "./EditRoomDescription";

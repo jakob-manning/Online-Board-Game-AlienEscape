@@ -55,7 +55,7 @@ const ReactFunctionalComponent: React.FC<Props> = (props: Props, children) => {
             setSearchResults(results)
         } else {
             // clear search results
-            setSearchResults([])
+            setSearchResults(Object.values(props.users).slice(0,9))
         }
     }, [searchValue])
 
