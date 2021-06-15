@@ -126,6 +126,7 @@ const Login: React.FC = () => {
                 >
                     <Text
                         m={"5"}
+                        p={"5"}
                         bgGradient="linear(to-l, #e0e1ff, #ffe0e5)"
                         bgClip="text"
                         fontSize="6xl"
@@ -146,6 +147,7 @@ const Login: React.FC = () => {
                 >
                     <Text
                         m={"5"}
+                        p={"1"}
                         bgGradient="linear(to-l, #e0e1ff, #ffe0e5)"
                         bgClip="text"
                         fontSize="6xl"

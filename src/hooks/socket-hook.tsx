@@ -16,7 +16,7 @@ export const initiateSocket = (token: string | null, errorCallBack: (error: Erro
         }
     );
 
-    if(Notification){
+    if(window.Notification){
         Notification.requestPermission()
     }
 
@@ -58,7 +58,7 @@ export const subscribeToChat = (userID: string | null, cb: (error: Error | null,
         // Display a notification if the message isn't from you
         if (newMessage.userID !== userID) {
             console.log(room)
-            if(Notification) new Notification(newMessage.userName, {
+            if(window.Notification) new Notification(newMessage.userName, {
                 body: newMessage.message,
                 icon: favicon,
             });
