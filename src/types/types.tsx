@@ -51,7 +51,8 @@ export interface chatRoom {
     password?: string,
     admin?:string[],
     messages: chatItem[],
-    membersRead: membersDict
+    membersRead: membersDict,
+    open: boolean,
 }
 
 export interface Toast {

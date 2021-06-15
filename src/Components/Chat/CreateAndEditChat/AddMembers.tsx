@@ -2,18 +2,13 @@ import React, {useEffect, useState} from 'react';
 
 import {
     Box,
-    Text,
     Button,
     Input,
-    FormControl,
     FormLabel,
-    FormErrorMessage,
     Avatar,
     Tag,
     TagLabel,
-    CloseButton,
-    IconButton,
-    Popover, PopoverTrigger, PopoverContent, PopoverArrow, PopoverCloseButton, PopoverHeader, PopoverBody,PopoverFooter
+    Popover, PopoverTrigger, PopoverContent, PopoverArrow, PopoverCloseButton, PopoverHeader,PopoverFooter
 } from "@chakra-ui/react";
 import {chatRoom, Toast, userDict, userInterface} from "../../../types/types";
 

@@ -35,13 +35,13 @@ const ChatFeed: React.FC<Props> = (props: Props) => {
                 let textAlign: ResponsiveValue<CanvasTextAlign> = "left"
                 let me = false
                 // let backgroundColor = "#ffabd5"
-                let backgroundColor = "#FEB2B2"
+                let backgroundColor = "pink.200"
                 if (item.userID === props.currentUser) {
                     alignSelf = "flex-end"
                     textAlign = "right"
                     me = true
                     // backgroundColor = "#cccfff"
-                    backgroundColor = "#D6BCFA"
+                    backgroundColor = "purple.200"
                 }
                 return (
                     <Box
@@ -79,8 +79,9 @@ const ChatFeed: React.FC<Props> = (props: Props) => {
                                 alignSelf={alignSelf}
                                 textAlign={textAlign}
                                 mt="1"
-                                // fontWeight="semibold"
-                                color="gray.700"
+                                fontWeight="normal"
+                                fontSize={"md"}
+                                color="gray.900"
                             >
                                 {item.message}
                             </Box>

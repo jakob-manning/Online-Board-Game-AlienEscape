@@ -244,41 +244,6 @@ const ChatRooms: React.FC = (props) => {
         return unlisten
     }, [history])
 
-
-    // const unblock = history.block('Are you sure you want to leave this page?');
-    //
-    // // Or use a function that returns the message when it's needed.
-    // history.block((location, action) => {
-    //     // The location and action arguments indicate the location
-    //     // we're transitioning to and how we're getting there.
-    //
-    //     // A common use case is to prevent the user from leaving the
-    //     // page if there's a form they haven't submitted yet.
-    //     return 'Are you sure you want to leave this page?';
-    // });
-    //
-    // // To stop blocking transitions, call the function returned from block().
-    // unblock();
-
-    // useEffect(() => {
-    //     // Register a simple prompt message that will be shown the
-    //     // user before they navigate away from the current page.
-    //     const unblock = history.block('Are you sure you want to leave this page?');
-    //
-    //     // Or use a function that returns the message when it's needed.
-    //     history.block((location, action) => {
-    //         // The location and action arguments indicate the location
-    //         // we're transitioning to and how we're getting there.
-    //
-    //         // A common use case is to prevent the user from leaving the
-    //         // page if there's a form they haven't submitted yet.
-    //         return 'Are you sure you want to leave this page?';
-    //     });
-    //
-    //     // To stop blocking transitions, call the function returned from block().
-    //     return unblock();
-    // }, [history])
-
     const roomEnterHandler = (newRoom: roomID) => {
         setRoomInView(newRoom)
 
@@ -410,6 +375,7 @@ const ChatRooms: React.FC = (props) => {
                                                     users={users}
                                                     addUser={addUser}
                                                     removeUser={removeUser}
+                                                    removeSelf={() => removeUser(auth.userId as string)}
                          />
                          }>
             </SmallHeader>
@@ -453,8 +419,6 @@ const ChatRooms: React.FC = (props) => {
                     <Box
                         flexDirection={"column"}
                         className={roomInView ? classes.roomList : classes.roomListVisible}
-
-                        border={"5px solid green"}
                     >
                         <Button onClick={onOpen}
                                 colorScheme={"purple"}
@@ -475,7 +439,11 @@ const ChatRooms: React.FC = (props) => {
                                                   currentRoom={roomInView ? rooms[roomInView]?.id : undefined}
                                                   roomDict={rooms}
                                                   setRoom={roomEnterHandler}
-                        /> : <PublicRooms setRoom={publicRoomEnterHandler} currentUser={auth.userId as string} currentRoom={roomInView ? rooms[roomInView]?.id : undefined} />}
+                        /> : <PublicRooms subscribedRooms={rooms}
+                                          setRoom={publicRoomEnterHandler}
+                                          currentUser={auth.userId as string}
+                                          currentRoom={roomInView ? rooms[roomInView]?.id : undefined}
+                        />}
                     </Box>
                     <Box flexDirection={"column"}
                          className={roomInView ? classes.chatParent : classes.chatParentHidden}

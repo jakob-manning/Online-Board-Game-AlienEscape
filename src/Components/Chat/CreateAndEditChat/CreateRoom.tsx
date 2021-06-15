@@ -11,6 +11,7 @@ import {
     TagLabel,
     CloseButton,
     IconButton,
+    Switch,
 } from "@chakra-ui/react";
 import {Formik, Form, Field, FormikProps, FieldProps, FormikHelpers} from "formik";
 import React, {useEffect, useState} from "react";
@@ -37,6 +38,7 @@ const CreateRoom: React.FC<Props> = (props: Props) => {
     const [searchValue, setSearchValue] = useState("")
     const [searchResults, setSearchResults] = useState<userInterface[]>([])
     const [usersAdded, setUsersAdded] = useState<userDict>({})
+    const [publicChat, setPublicChat] = useState<boolean>(false)
     const searchBarRef = React.useRef<HTMLInputElement>(null);
 
     function validateName(value: string) {
@@ -62,7 +64,8 @@ const CreateRoom: React.FC<Props> = (props: Props) => {
         actions.setSubmitting(true)
         const body = {
             name: values.name,
-            description: values.description
+            description: values.description,
+            open: publicChat
         }
 
         let response: any
@@ -118,9 +121,12 @@ const CreateRoom: React.FC<Props> = (props: Props) => {
     }
 
     useEffect(() => {
+        let userList = Object.values(props.users)
+        userList = userList.filter( user => !usersAdded[user.id])
+
         if (searchValue.length > 0) {
             //search users for this name
-            let userList = Object.values(props.users)
+            // let userList = Object.values(props.users)
             let results = userList.filter(user => {
                 let substring = user.name.search(new RegExp(searchValue, "i"))
                 if (substring === -1) {
@@ -131,9 +137,9 @@ const CreateRoom: React.FC<Props> = (props: Props) => {
             setSearchResults(results)
         } else {
             // show a few people
-            setSearchResults(Object.values(props.users).slice(0,9))
+            setSearchResults(userList.slice(0,9))
         }
-    }, [searchValue])
+    }, [searchValue, usersAdded])
 
     return (
         <Formik
@@ -228,6 +234,23 @@ const CreateRoom: React.FC<Props> = (props: Props) => {
                         })}
                         </Box>
                     </Box>
+                    <Field name="public">
+                        {({field, form}: FieldProps) => (
+                            <FormControl isInvalid={!!form.errors.public && !!form.touched.public}>
+                                <FormLabel htmlFor="public" mt={"4"}>Public Room</FormLabel>
+                                <Switch
+                                    {...field}
+                                    ml={"2"}
+
+                                    id="public"
+                                    size="lg"
+                                    colorScheme="purple"
+                                    onChange={() => setPublicChat(!publicChat)}
+                                />
+                                <FormErrorMessage>{form.errors.public}</FormErrorMessage>
+                            </FormControl>
+                        )}
+                    </Field>
                     <Box m={"3"} pb={"6"}>
                         <Button
                             mt={4}
