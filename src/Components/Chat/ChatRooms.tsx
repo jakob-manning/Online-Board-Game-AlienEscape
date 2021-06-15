@@ -116,8 +116,6 @@ const ChatRooms: React.FC = (props) => {
     }
 
     const newRoomCallback = (room: chatRoom) => {
-        console.log("new room")
-        console.log(room)
         setRooms(oldRooms => {
             let newRooms = {...oldRooms}
             newRooms[room.id] = room
@@ -127,13 +125,6 @@ const ChatRooms: React.FC = (props) => {
     }
 
     const roomDeletedCallback = (roomID: roomID) => {
-        console.log("room deleted")
-        console.log(roomID)
-        console.log("room in view and deleted room ID:")
-        console.log(roomInView)
-        console.log(typeof roomInView)
-        console.log(roomID)
-        console.log(typeof roomID)
         if (roomInView === roomID) {
             setRoomInView(null)
             console.log("the room you were viewing is no longer available")
@@ -155,8 +146,6 @@ const ChatRooms: React.FC = (props) => {
     }
 
     const roomUpdateCallBack = (room: chatRoom) => {
-        console.log("updating room metadata")
-        console.log(room)
         setRooms(oldRooms => {
             if (room.id) {
                 let newRooms = {...oldRooms}
@@ -185,11 +174,7 @@ const ChatRooms: React.FC = (props) => {
             }
             if (data !== null) {
                 const {newMessage, room} = data
-                console.log("new Message")
-                console.log(newMessage)
                 setRooms(oldRooms => {
-                    console.log("old rooms")
-                    console.log(oldRooms)
                     let newRoom = {...oldRooms[room]}
                     let newRoomMessages = [...oldRooms[room].messages]
                     newRoomMessages.push(newMessage)
@@ -200,14 +185,11 @@ const ChatRooms: React.FC = (props) => {
                         newRoom.membersRead = {}
                     }
                     if (roomInView === room || newMessage.userID === auth.userId) {
-                        console.log("marking as read because room in view")
                         newRoom.membersRead[auth.userId as string] = true
                         if (roomInView) markAsRead(roomInView)
                     } else {
                         newRoom.membersRead[auth.userId as string] = false
                     }
-                    console.log("new room")
-                    console.log(newRoom)
                     return {...oldRooms, [room]: newRoom}
                 })
             }
@@ -232,8 +214,6 @@ const ChatRooms: React.FC = (props) => {
 
     useEffect(() => {
         const unlisten = history.listen((newLocation, action) => {
-            console.log(action)
-            console.log(newLocation)
             setRoomInView(null)
             history.go(1);
         });
@@ -338,7 +318,6 @@ const ChatRooms: React.FC = (props) => {
     }
 
     const removeUser = async (userID: userID) => {
-        console.log("request to remove user")
         if (roomInView) {
             try {
                 removeUserFromRoom(userID, roomInView)

@@ -32,10 +32,10 @@ function App() {
                     <p/>
                     <Switch>
                         <Route path="/login">
-                            {token? <Redirect to="/" /> : <Login/>}
+                            {token ? <Redirect to="/" /> : <Login/>}
                         </Route>
                         <Route path="/signup">
-                            {token? <Redirect to="/" /> : <SignUp/>}
+                            {token ? <Redirect to="/" /> : <SignUp/>}
                         </Route>
                         <Route path="/verify">
                             <VerifyEmail />

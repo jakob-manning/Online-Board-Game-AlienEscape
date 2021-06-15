@@ -16,7 +16,9 @@ export const initiateSocket = (token: string | null, errorCallBack: (error: Erro
         }
     );
 
-    Notification.requestPermission()
+    if(Notification){
+        Notification.requestPermission()
+    }
 
     console.log(`Connecting socket...`);
 
@@ -51,13 +53,12 @@ export const subscribeToChat = (userID: string | null, cb: (error: Error | null,
 
     socket.on('chat', (payload: chatPayload) => {
         console.log('Websocket chat event received!');
-        console.log(payload.newMessage)
 
         const {newMessage, room} = payload
         // Display a notification if the message isn't from you
         if (newMessage.userID !== userID) {
             console.log(room)
-            new Notification(newMessage.userName, {
+            if(Notification) new Notification(newMessage.userName, {
                 body: newMessage.message,
                 icon: favicon,
             });
@@ -85,7 +86,6 @@ export const listenForNewRooms = (newRoomCallback: (room: chatRoom) => void,
     socket.on("roomDeleted", (payload) => {
         console.log('Websocket event received! - Room deleted');
         console.log("room delete sent to us")
-        console.log(payload)
         const {roomID} = payload
         return roomDeletedCallback(roomID)
     });
