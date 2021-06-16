@@ -2,6 +2,7 @@ import React, {useEffect} from 'react';
 import {
     Box,
     ResponsiveValue,
+    Text
 } from "@chakra-ui/react";
 import {chatItem} from "../../types/types";
 
@@ -18,6 +19,27 @@ const ChatFeed: React.FC<Props> = (props: Props) => {
             bottomRef.current.scrollIntoView();
         }
     }, [props])
+
+    const calculateTimeSinceMessage = (date: Date) => {
+        let now = new Date()
+        let timepassed = now.getTime() - date.getTime()
+        let hours = timepassed / 1000 / 60 / 60
+
+        if (hours < 1){
+            return `${Math.floor(hours * 60)}m`
+        }
+
+        if (hours < 24) {
+            return `${Math.floor(hours)}h`
+        }
+
+        if (date.getFullYear() === now.getFullYear()) {
+            let datestring = date.toDateString()
+            return datestring.substr(0, datestring.length - 4)
+        }
+
+        return date.toDateString()
+    }
 
     return (
         <React.Fragment>
@@ -43,6 +65,13 @@ const ChatFeed: React.FC<Props> = (props: Props) => {
                     // backgroundColor = "#cccfff"
                     backgroundColor = "purple.200"
                 }
+                let timestamp = null
+                if(index > props.chatItems.length - 2){
+                    if(item.timeStamp) timestamp = calculateTimeSinceMessage(new Date(item.timeStamp))
+                }
+
+
+
                 return (
                     <Box
                         maxW="sm"
@@ -85,6 +114,17 @@ const ChatFeed: React.FC<Props> = (props: Props) => {
                             >
                                 {item.message}
                             </Box>
+                            <Text
+                                alignSelf={"flex-end"}
+                                color="gray.100"
+                                fontWeight="normal"
+                                // letterSpacing="narrow"
+                                fontSize="xs"
+                                // textTransform="uppercase"
+                                ref={currentRef}
+                            >
+                                {timestamp}
+                            </Text>
                         </Box>
                     </Box>
                 )
