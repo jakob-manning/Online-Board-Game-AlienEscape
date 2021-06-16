@@ -5,6 +5,7 @@ import {
     Text
 } from "@chakra-ui/react";
 import {chatItem} from "../../types/types";
+import Linkify from 'react-linkify';
 
 interface Props {
     chatItems: chatItem[]
@@ -70,8 +71,6 @@ const ChatFeed: React.FC<Props> = (props: Props) => {
                     if(item.timeStamp) timestamp = calculateTimeSinceMessage(new Date(item.timeStamp))
                 }
 
-
-
                 return (
                     <Box
                         maxW="sm"
@@ -106,21 +105,22 @@ const ChatFeed: React.FC<Props> = (props: Props) => {
                             </Box>
                             <Box
                                 alignSelf={alignSelf}
-                                textAlign={textAlign}
+                                textAlign={"left"}
                                 mt="1"
                                 fontWeight="normal"
                                 fontSize={"md"}
                                 color="gray.900"
+                                wordBreak={"break-all"}
                             >
+                                <Linkify>
                                 {item.message}
+                                </Linkify>
                             </Box>
                             <Text
                                 alignSelf={"flex-end"}
                                 color="gray.100"
                                 fontWeight="normal"
-                                // letterSpacing="narrow"
                                 fontSize="xs"
-                                // textTransform="uppercase"
                                 ref={currentRef}
                             >
                                 {timestamp}
